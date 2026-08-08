@@ -1,3 +1,5 @@
+import { ConnectWallet } from "../components/ConnectWallet";
+
 const markets = [
   {
     category: "Cripto",
@@ -19,7 +21,7 @@ export default function Home() {
       <div className="hero">
         <nav>
           <span className="logo">Arcdiction</span>
-          <button className="btn-primary">Conectar wallet</button>
+          <ConnectWallet />
         </nav>
         <h1>Preveja. Ganhe XP. Suba no ranking.</h1>
         <p>
