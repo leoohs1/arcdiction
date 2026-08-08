@@ -20,7 +20,10 @@ export default function Home() {
     <main>
       <div className="hero">
         <nav>
-          <span className="logo">Arcdiction</span>
+          <span className="logo">
+            <img src="/logo.png" alt="Arcdiction" style={{ height: 24, verticalAlign: "middle", marginRight: 8 }} />
+            Arcdiction
+          </span>
           <ConnectWallet />
         </nav>
         <h1>Preveja. Ganhe XP. Suba no ranking.</h1>
