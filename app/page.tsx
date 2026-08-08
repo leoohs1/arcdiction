@@ -1,4 +1,4 @@
-import { ConnectWallet } from "../components/ConnectWallet";
+import { Header } from "../components/Header";
 
 const markets = [
   {
@@ -19,13 +19,7 @@ export default function Home() {
   return (
     <main>
       <div className="hero">
-        <nav>
-          <span className="logo">
-            <img src="/logo.png" alt="Arcdiction" style={{ height: 24, verticalAlign: "middle", marginRight: 8 }} />
-            Arcdiction
-          </span>
-          <ConnectWallet />
-        </nav>
+        <Header active="" />
         <h1>Preveja. Ganhe XP. Suba no ranking.</h1>
         <p>
           Mercados resolvidos por Pyth, liquidez em USDC, jackpot comunitário
