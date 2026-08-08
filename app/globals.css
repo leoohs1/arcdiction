@@ -112,3 +112,31 @@ nav .logo {
   font-size: 12px;
   font-weight: 500;
 }
+
+.nav-links {
+  display: flex;
+  gap: 20px;
+}
+
+.nav-link {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 13px;
+  text-decoration: none;
+}
+
+.nav-link-active {
+  color: #fff;
+  border-bottom: 2px solid #4ea8e0;
+  padding-bottom: 2px;
+}
+
+.page-hero {
+  background: linear-gradient(180deg, #04121f 0%, #0a2540 40%, #0f4a52 100%);
+  padding-bottom: 20px;
+}
+
+.page-hero-content {
+  padding: 20px 24px 0;
+}
+
+.page-h
