@@ -15,6 +15,7 @@ const markets = [
     baseNo: 620,
     liquidity: "4.200 USDC",
     deadline: "Encerra em 3 dias",
+    xpReward: 120,
   },
   {
     id: "rm-champions",
@@ -24,6 +25,7 @@ const markets = [
     baseNo: 590,
     liquidity: "1.850 USDC",
     deadline: "Encerra em 12 dias",
+    xpReward: 120,
   },
   {
     id: "fed-rate-cut",
@@ -33,6 +35,7 @@ const markets = [
     baseNo: 650,
     liquidity: "900 USDC",
     deadline: "Encerra em 4 meses",
+    xpReward: 120,
   },
 ];
 
@@ -51,6 +54,7 @@ export default function Mercados() {
   const [totals, setTotals] = useState<Totals>({});
   const [loadingOdds, setLoadingOdds] = useState(true);
   const [balance, setBalance] = useState<number | null>(null);
+  const [xp, setXp] = useState<number | null>(null);
 
   async function loadOdds() {
     setLoadingOdds(true);
@@ -76,11 +80,10 @@ export default function Mercados() {
     setLoadingOdds(false);
   }
 
-  async function loadBalance(wallet: string) {
-    // tenta buscar o perfil; se não existir, cria com saldo inicial de $10
+  async function loadProfile(wallet: string) {
     const { data, error: fetchError } = await supabase
       .from("profiles")
-      .select("balance")
+      .select("balance, xp")
       .eq("wallet", wallet)
       .maybeSingle();
 
@@ -90,11 +93,13 @@ export default function Mercados() {
       const { data: created } = await supabase
         .from("profiles")
         .insert({ wallet, balance: STARTING_BALANCE })
-        .select("balance")
+        .select("balance, xp")
         .single();
       setBalance(created ? Number(created.balance) : STARTING_BALANCE);
+      setXp(created ? Number(created.xp) : 0);
     } else {
       setBalance(Number(data.balance));
+      setXp(Number(data.xp));
     }
   }
 
@@ -103,8 +108,11 @@ export default function Mercados() {
   }, []);
 
   useEffect(() => {
-    if (address) loadBalance(address);
-    else setBalance(null);
+    if (address) loadProfile(address);
+    else {
+      setBalance(null);
+      setXp(null);
+    }
   }, [address]);
 
   function oddsFor(marketId: string) {
@@ -139,6 +147,9 @@ export default function Mercados() {
       return;
     }
 
+    const market = markets.find((m) => m.id === activeMarket);
+    const xpReward = market?.xpReward ?? 0;
+
     setSubmitting(true);
     setError("");
 
@@ -156,8 +167,13 @@ export default function Mercados() {
     }
 
     const newBalance = (balance ?? STARTING_BALANCE) - numericAmount;
-    await supabase.from("profiles").update({ balance: newBalance }).eq("wallet", address);
+    const newXp = (xp ?? 0) + xpReward;
+    await supabase
+      .from("profiles")
+      .update({ balance: newBalance, xp: newXp })
+      .eq("wallet", address);
     setBalance(newBalance);
+    setXp(newXp);
 
     setSubmitting(false);
     setSuccessId(activeMarket);
@@ -181,6 +197,8 @@ export default function Mercados() {
         <div style={{ maxWidth: 720, margin: "0 auto 16px", padding: "0 16px" }}>
           <p style={{ fontSize: 13, color: "#5f5e5a" }}>
             Saldo de teste: <strong>{balance === null ? "..." : `$${balance.toFixed(2)}`}</strong>
+            {"  ·  "}
+            XP: <strong>{xp === null ? "..." : xp}</strong>
           </p>
         </div>
       )}
@@ -213,7 +231,7 @@ export default function Mercados() {
               </div>
               <div className="market-card-meta">
                 <span>Liquidez: {m.liquidity}</span>
-                <span>+120 XP por previsão</span>
+                <span>+{m.xpReward} XP por previsão</span>
               </div>
 
               {activeMarket === m.id && (
