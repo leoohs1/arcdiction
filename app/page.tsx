@@ -1,3 +1,5 @@
+"use client";
+import { useEffect, useState } from "react";
 import { Header } from "../components/Header";
 
 const markets = [
@@ -60,7 +62,35 @@ const steps = [
   { icon: "🏆", title: "Ganhe", desc: "Acerte, ganhe USDC e suba no ranking com XP." },
 ];
 
+const techStack = [
+  { label: "PYTH", desc: "Dados de mercado em tempo real e infraestrutura de oráculo." },
+  { label: "ARCDICTION", desc: "Contratos que definem a lógica dos mercados, de forma transparente." },
+  { label: "ARC", desc: "A camada de execução que dá liquidação rápida ao Arcdiction." },
+  { label: "USDC", desc: "A stablecoin usada para participação e liquidação." },
+];
+
+// calcula o tempo até a próxima segunda-feira 00:00 (distribuição semanal)
+function getCountdown() {
+  const now = new Date();
+  const next = new Date(now);
+  const daysUntilMonday = (8 - now.getDay()) % 7 || 7;
+  next.setDate(now.getDate() + daysUntilMonday);
+  next.setHours(0, 0, 0, 0);
+  const diff = next.getTime() - now.getTime();
+  const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+  const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+  const minutes = Math.floor((diff / (1000 * 60)) % 60);
+  return { days, hours, minutes };
+}
+
 export default function Home() {
+  const [countdown, setCountdown] = useState(getCountdown());
+
+  useEffect(() => {
+    const interval = setInterval(() => setCountdown(getCountdown()), 60000);
+    return () => clearInterval(interval);
+  }, []);
+
   return (
     <main>
       {/* HERO */}
@@ -171,6 +201,115 @@ export default function Home() {
               </div>
             ))}
           </div>
+        </div>
+      </section>
+
+      {/* TECH BEHIND IT */}
+      <section style={{ padding: "56px 24px", maxWidth: 960, margin: "0 auto" }}>
+        <p style={{ fontSize: 13, fontWeight: 600, color: "#7fc9c4", marginBottom: 4 }}>
+          🔮 POR BAIXO DO CAPÔ
+        </p>
+        <h2 style={{ fontSize: 26, margin: "0 0 32px" }}>
+          A tecnologia por trás do Arcdiction
+        </h2>
+
+        {/* fluxo visual */}
+        <div
+          style={{
+            display: "flex",
+            flexWrap: "wrap",
+            alignItems: "center",
+            justifyContent: "center",
+            gap: 8,
+            marginBottom: 40,
+            fontSize: 13,
+            fontWeight: 600,
+            color: "#0a2540",
+          }}
+        >
+          {techStack.map((t, i) => (
+            <span key={i} style={{ display: "flex", alignItems: "center", gap: 8 }}>
+              <span
+                style={{
+                  background: "#eef4fb",
+                  padding: "8px 14px",
+                  borderRadius: 8,
+                  border: "1px solid #d6e4f0",
+                }}
+              >
+                {t.label}
+              </span>
+              {i < techStack.length - 1 && <span style={{ color: "#9aa5b1" }}>→</span>}
+            </span>
+          ))}
+        </div>
+
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
+            gap: 16,
+          }}
+        >
+          {techStack.map((t, i) => (
+            <div
+              key={i}
+              style={{
+                border: "1px solid #eee",
+                borderRadius: 10,
+                padding: 16,
+              }}
+            >
+              <p style={{ fontSize: 11, fontWeight: 700, color: "#7fc9c4", marginBottom: 6 }}>
+                {t.label}
+              </p>
+              <p style={{ fontSize: 13, color: "#5f5e5a" }}>{t.desc}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* WEEKLY JACKPOT */}
+      <section
+        style={{
+          padding: "56px 24px",
+          background: "linear-gradient(135deg, #123a5e 0%, #1c5c8f 100%)",
+          color: "#fff",
+          textAlign: "center",
+        }}
+      >
+        <div style={{ maxWidth: 640, margin: "0 auto" }}>
+          <p style={{ fontSize: 13, fontWeight: 600, color: "#7fc9c4", marginBottom: 4 }}>
+            💰 JACKPOT SEMANAL
+          </p>
+          <h2 style={{ fontSize: 26, margin: "0 0 8px" }}>
+            Predict. Compete. Earn.
+          </h2>
+          <p style={{ color: "rgba(255,255,255,0.7)", marginBottom: 24 }}>
+            Toda semana, a comunidade compete pelo jackpot.
+          </p>
+
+          <p style={{ fontSize: 40, fontWeight: 700, marginBottom: 24 }}>
+            $250 USDC <span style={{ fontSize: 13, fontWeight: 400, color: "rgba(255,255,255,0.5)" }}>(prévia)</span>
+          </p>
+
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              gap: 24,
+              marginBottom: 32,
+              flexWrap: "wrap",
+            }}
+          >
+            <span>🏆 #1 — 50%</span>
+            <span>🥈 #2 — 30%</span>
+            <span>🥉 #3 — 20%</span>
+          </div>
+
+          <p style={{ fontSize: 13, color: "rgba(255,255,255,0.6)" }}>
+            Próxima distribuição em {countdown.days}d {countdown.hours}h {countdown.minutes}m
+          </p>
         </div>
       </section>
     </main>
