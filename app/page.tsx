@@ -179,6 +179,44 @@ export default function Home() {
               </div>
             ))}
           </div>
+
+          <div style={{ marginTop: 32, textAlign: "center" }}>
+            <p style={{ fontSize: 13, color: "rgba(255,255,255,0.6)", marginBottom: 12 }}>
+              Quer testar com USDC de testnet de verdade?
+            </p>
+            <div style={{ display: "flex", gap: 8, justifyContent: "center", flexWrap: "wrap" }}>
+              <a
+                href="https://faucet.circle.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{
+                  padding: "8px 12px",
+                  fontSize: 13,
+                  borderRadius: 6,
+                  border: "1px solid rgba(255,255,255,0.2)",
+                  color: "#fff",
+                  textDecoration: "none",
+                }}
+              >
+                Pegar USDC de teste (faucet oficial)
+              </a>
+              <a
+                href="https://docs.arc.io/arc/references/connect-to-arc"
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{
+                  padding: "8px 12px",
+                  fontSize: 13,
+                  borderRadius: 6,
+                  border: "1px solid rgba(255,255,255,0.2)",
+                  color: "#fff",
+                  textDecoration: "none",
+                }}
+              >
+                Adicionar Arc Testnet à wallet
+              </a>
+            </div>
+          </div>
         </div>
       </section>
 
