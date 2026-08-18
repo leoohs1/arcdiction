@@ -1,31 +1,71 @@
+"use client";
+import { useEffect, useState } from "react";
 import { Header } from "../../components/Header";
+import { supabase } from "../../lib/supabaseClient";
 
-const ranking = [
-  { rank: 1, address: "0xMk...4a2", level: 14, xp: "8.420", avatar: "MK", color: "#534ab7" },
-  { rank: 2, address: "0xLr...91c", level: 12, xp: "7.180", avatar: "LR", color: "#0f6e56" },
-  { rank: 3, address: "0xTs...7f0", level: 11, xp: "6.930", avatar: "TS", color: "#993c1d" },
-];
+const avatarColors = ["#534ab7", "#0f6e56", "#993c1d", "#1c5c8f", "#7a4d9e", "#2e7d32"];
+
+function short(address: string) {
+  return `${address.slice(0, 6)}...${address.slice(-4)}`;
+}
+
+// nível simples derivado do XP total — 1 nível a cada 200 XP
+function levelFromXp(xp: number) {
+  return Math.floor(xp / 200) + 1;
+}
+
+type RankedProfile = {
+  wallet: string;
+  xp: number;
+};
 
 export default function Leaderboard() {
+  const [ranking, setRanking] = useState<RankedProfile[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function loadRanking() {
+      const { data } = await supabase
+        .from("profiles")
+        .select("wallet, xp")
+        .order("xp", { ascending: false })
+        .limit(10);
+      setRanking((data as RankedProfile[]) || []);
+      setLoading(false);
+    }
+    loadRanking();
+  }, []);
+
   return (
     <main className="leaderboard-page">
       <div className="page-hero" style={{ background: "transparent" }}>
         <Header active="Leaderboard" />
         <div className="page-hero-content">
           <h1>Leaderboard</h1>
-          <p>Jackpot comunitário desta semana: 850 USDC</p>
+          <p>
+            Ranking por XP da comunidade ·{" "}
+            <a href="/jackpot" style={{ color: "inherit" }}>
+              ver jackpot semanal →
+            </a>
+          </p>
         </div>
       </div>
-
       <div className="leaderboard-list">
-        {ranking.map((r) => (
-          <div className="leaderboard-row" key={r.address}>
-            <span className="leaderboard-rank">{r.rank}</span>
-            <div className="leaderboard-avatar" style={{ background: r.color }}>
-              {r.avatar}
+        {loading && <p style={{ padding: 16 }}>Carregando ranking...</p>}
+        {!loading && ranking.length === 0 && (
+          <p style={{ padding: 16 }}>Ainda não há previsões registradas.</p>
+        )}
+        {ranking.map((r, i) => (
+          <div className="leaderboard-row" key={r.wallet}>
+            <span className="leaderboard-rank">{i + 1}</span>
+            <div
+              className="leaderboard-avatar"
+              style={{ background: avatarColors[i % avatarColors.length] }}
+            >
+              {r.wallet.slice(2, 4).toUpperCase()}
             </div>
-            <span className="leaderboard-address">{r.address}</span>
-            <span className="leaderboard-level">Nível {r.level}</span>
+            <span className="leaderboard-address">{short(r.wallet)}</span>
+            <span className="leaderboard-level">Nível {levelFromXp(r.xp)}</span>
             <span className="leaderboard-xp">{r.xp} XP</span>
           </div>
         ))}
