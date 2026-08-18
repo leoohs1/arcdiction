@@ -1,5 +1,4 @@
 "use client";
-import { useEffect, useState } from "react";
 import { Header } from "../components/Header";
 
 const markets = [
@@ -69,28 +68,7 @@ const techStack = [
   { label: "USDC", desc: "A stablecoin usada para participação e liquidação." },
 ];
 
-// calcula o tempo até a próxima segunda-feira 00:00 (distribuição semanal)
-function getCountdown() {
-  const now = new Date();
-  const next = new Date(now);
-  const daysUntilMonday = (8 - now.getDay()) % 7 || 7;
-  next.setDate(now.getDate() + daysUntilMonday);
-  next.setHours(0, 0, 0, 0);
-  const diff = next.getTime() - now.getTime();
-  const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-  const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
-  const minutes = Math.floor((diff / (1000 * 60)) % 60);
-  return { days, hours, minutes };
-}
-
 export default function Home() {
-  const [countdown, setCountdown] = useState(getCountdown());
-
-  useEffect(() => {
-    const interval = setInterval(() => setCountdown(getCountdown()), 60000);
-    return () => clearInterval(interval);
-  }, []);
-
   return (
     <main>
       {/* HERO */}
@@ -213,7 +191,6 @@ export default function Home() {
           A tecnologia por trás do Arcdiction
         </h2>
 
-        {/* fluxo visual */}
         <div
           style={{
             display: "flex",
@@ -266,50 +243,6 @@ export default function Home() {
               <p style={{ fontSize: 13, color: "#5f5e5a" }}>{t.desc}</p>
             </div>
           ))}
-        </div>
-      </section>
-
-      {/* WEEKLY JACKPOT */}
-      <section
-        style={{
-          padding: "56px 24px",
-          background: "linear-gradient(135deg, #123a5e 0%, #1c5c8f 100%)",
-          color: "#fff",
-          textAlign: "center",
-        }}
-      >
-        <div style={{ maxWidth: 640, margin: "0 auto" }}>
-          <p style={{ fontSize: 13, fontWeight: 600, color: "#7fc9c4", marginBottom: 4 }}>
-            💰 JACKPOT SEMANAL
-          </p>
-          <h2 style={{ fontSize: 26, margin: "0 0 8px" }}>
-            Predict. Compete. Earn.
-          </h2>
-          <p style={{ color: "rgba(255,255,255,0.7)", marginBottom: 24 }}>
-            Toda semana, a comunidade compete pelo jackpot.
-          </p>
-
-          <p style={{ fontSize: 40, fontWeight: 700, marginBottom: 24 }}>
-            $250 USDC <span style={{ fontSize: 13, fontWeight: 400, color: "rgba(255,255,255,0.5)" }}>(prévia)</span>
-          </p>
-
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "center",
-              gap: 24,
-              marginBottom: 32,
-              flexWrap: "wrap",
-            }}
-          >
-            <span>🏆 #1 — 50%</span>
-            <span>🥈 #2 — 30%</span>
-            <span>🥉 #3 — 20%</span>
-          </div>
-
-          <p style={{ fontSize: 13, color: "rgba(255,255,255,0.6)" }}>
-            Próxima distribuição em {countdown.days}d {countdown.hours}h {countdown.minutes}m
-          </p>
         </div>
       </section>
     </main>
