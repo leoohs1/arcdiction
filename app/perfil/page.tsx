@@ -4,19 +4,10 @@ import { useAccount } from "wagmi";
 import { Header } from "../../components/Header";
 import { supabase } from "../../lib/supabaseClient";
 
-// mesmos ids/perguntas usados na página de Mercados, só pra exibir nome bonito no histórico
 const marketNames: Record<string, string> = {
   "btc-70k": "BTC acima de $70k?",
   "rm-champions": "Real Madrid vence a Champions?",
   "fed-rate-cut": "Fed corta juros dos EUA?",
-};
-
-// dados oficiais da Arc Testnet (Circle) — docs.arc.io
-const ARC_TESTNET = {
-  chainId: "0x4cef52", // 5042002 em decimal
-  chainName: "Arc Testnet",
-  nativeCurrency: { name: "USDC", symbol: "USDC", decimals: 18 },
-  rpcUrls: ["https://rpc.testnet.arc.io"],
 };
 
 function todayStr() {
@@ -52,7 +43,6 @@ export default function Perfil() {
   const [bets, setBets] = useState<Bet[]>([]);
   const [checkingIn, setCheckingIn] = useState(false);
   const [checkinMessage, setCheckinMessage] = useState("");
-  const [networkMessage, setNetworkMessage] = useState("");
 
   async function loadProfile(wallet: string) {
     const { data } = await supabase
@@ -97,7 +87,7 @@ export default function Perfil() {
     if (!address || !profile) return;
 
     const today = todayStr();
-    if (profile.last_checkin === today) return; // já fez check-in hoje
+    if (profile.last_checkin === today) return;
 
     setCheckingIn(true);
     setCheckinMessage("");
@@ -123,24 +113,6 @@ export default function Perfil() {
     setCheckinMessage(`+${xpGained} XP! Sequência: ${newStreak} dia(s).`);
   }
 
-  async function handleAddNetwork() {
-    setNetworkMessage("");
-    const eth = (window as any).ethereum;
-    if (!eth) {
-      setNetworkMessage("Nenhuma wallet compatível detectada no navegador.");
-      return;
-    }
-    try {
-      await eth.request({
-        method: "wallet_addEthereumChain",
-        params: [ARC_TESTNET],
-      });
-      setNetworkMessage("Rede Arc Testnet adicionada com sucesso!");
-    } catch (err) {
-      setNetworkMessage("Não foi possível adicionar a rede. Tente manualmente na sua wallet.");
-    }
-  }
-
   const alreadyCheckedInToday = profile?.last_checkin === todayStr();
 
   return (
@@ -153,17 +125,44 @@ export default function Perfil() {
         <p style={{ color: "#fff", padding: 24 }}>Conecte sua wallet para ver seu perfil.</p>
       ) : (
         <>
-          <div className="profile-header">
-            <div className="profile-avatar">
-              {address ? address.slice(2, 4).toUpperCase() : "??"}
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "flex-start",
+              flexWrap: "wrap",
+              gap: 16,
+            }}
+          >
+            <div className="profile-header">
+              <div className="profile-avatar">
+                {address ? address.slice(2, 4).toUpperCase() : "??"}
+              </div>
+              <div>
+                <p style={{ color: "#fff", fontSize: 16, fontWeight: 500, margin: "0 0 2px" }}>
+                  {address ? short(address) : ""}
+                </p>
+                <p style={{ color: "rgba(255,255,255,0.6)", fontSize: 12, margin: 0 }}>
+                  {profile ? `${profile.xp} XP` : "Carregando..."}
+                </p>
+              </div>
             </div>
-            <div>
-              <p style={{ color: "#fff", fontSize: 16, fontWeight: 500, margin: "0 0 2px" }}>
-                {address ? short(address) : ""}
-              </p>
-              <p style={{ color: "rgba(255,255,255,0.6)", fontSize: 12, margin: 0 }}>
-                {profile ? `${profile.xp} XP` : "Carregando..."}
-              </p>
+
+            <div style={{ textAlign: "right" }}>
+              <button
+                className="btn-primary"
+                onClick={handleCheckin}
+                disabled={checkingIn || alreadyCheckedInToday || !profile}
+              >
+                {alreadyCheckedInToday
+                  ? "Check-in já feito hoje ✓"
+                  : checkingIn
+                  ? "Registrando..."
+                  : "Fazer check-in diário"}
+              </button>
+              {checkinMessage && (
+                <p style={{ color: "#7fc9c4", fontSize: 13, marginTop: 8 }}>{checkinMessage}</p>
+              )}
             </div>
           </div>
 
@@ -180,73 +179,6 @@ export default function Perfil() {
               <p>{profile?.streak_count ?? 0}</p>
               <p>Sequência de check-in</p>
             </div>
-          </div>
-
-          <div style={{ margin: "20px 0", padding: "0 0" }}>
-            <button
-              className="btn-primary"
-              onClick={handleCheckin}
-              disabled={checkingIn || alreadyCheckedInToday || !profile}
-            >
-              {alreadyCheckedInToday
-                ? "Check-in já feito hoje ✓"
-                : checkingIn
-                ? "Registrando..."
-                : "Fazer check-in diário"}
-            </button>
-            {checkinMessage && (
-              <p style={{ color: "#7fc9c4", fontSize: 13, marginTop: 8 }}>{checkinMessage}</p>
-            )}
-          </div>
-
-          <div
-            style={{
-              margin: "20px 0",
-              padding: 16,
-              background: "rgba(255,255,255,0.06)",
-              borderRadius: 10,
-            }}
-          >
-            <p style={{ color: "#fff", fontSize: 13, fontWeight: 500, marginBottom: 4 }}>
-              Arc Testnet
-            </p>
-            <p style={{ color: "rgba(255,255,255,0.6)", fontSize: 12, marginBottom: 10 }}>
-              Adicione a rede de teste da Arc na sua wallet e pegue USDC de teste no faucet oficial da Circle.
-            </p>
-            <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
-              <button
-                onClick={handleAddNetwork}
-                style={{
-                  padding: "8px 12px",
-                  fontSize: 13,
-                  borderRadius: 6,
-                  border: "1px solid rgba(255,255,255,0.2)",
-                  background: "transparent",
-                  color: "#fff",
-                  cursor: "pointer",
-                }}
-              >
-                Adicionar Arc Testnet à wallet
-              </button>
-              <a
-                href="https://faucet.circle.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                style={{
-                  padding: "8px 12px",
-                  fontSize: 13,
-                  borderRadius: 6,
-                  border: "1px solid rgba(255,255,255,0.2)",
-                  color: "#fff",
-                  textDecoration: "none",
-                }}
-              >
-                Pegar USDC de teste (faucet oficial)
-              </a>
-            </div>
-            {networkMessage && (
-              <p style={{ color: "#7fc9c4", fontSize: 12, marginTop: 8 }}>{networkMessage}</p>
-            )}
           </div>
 
           <div className="profile-history">
