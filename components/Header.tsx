@@ -1,15 +1,13 @@
 "use client";
-
 import Link from "next/link";
 import { ConnectWallet } from "./ConnectWallet";
-
 const links = [
   { href: "/mercados", label: "Mercados" },
-  { href: "/leaderboard", label: "Leaderboard" },
-  { href: "/docs", label: "Docs" },
   { href: "/perfil", label: "Perfil" },
+  { href: "/leaderboard", label: "Leaderboard" },
+  { href: "/jackpot", label: "Jackpot" },
+  { href: "/docs", label: "Docs" },
 ];
-
 export function Header({ active }: { active: string }) {
   return (
     <nav>
