@@ -4,68 +4,68 @@ import { Header } from "../components/Header";
 const markets = [
   {
     id: "btc-70k",
-    category: "Cripto",
-    question: "BTC acima de $70k até 31/08?",
+    category: "Crypto",
+    question: "BTC above $70k by Aug 31?",
     yes: 38,
     no: 62,
-    liquidity: "4.200 USDC",
-    deadline: "Encerra em 3 dias",
+    liquidity: "4,200 USDC",
+    deadline: "Ends in 3 days",
   },
   {
     id: "rm-champions",
-    category: "Esporte",
-    question: "Real Madrid vence a Champions?",
+    category: "Sports",
+    question: "Real Madrid wins the Champions League?",
     yes: 41,
     no: 59,
-    liquidity: "1.850 USDC",
-    deadline: "Encerra em 12 dias",
+    liquidity: "1,850 USDC",
+    deadline: "Ends in 12 days",
   },
   {
     id: "fed-rate-cut",
     category: "Macro",
-    question: "Fed corta juros dos EUA até dezembro?",
+    question: "Fed cuts US rates by December?",
     yes: 35,
     no: 65,
     liquidity: "900 USDC",
-    deadline: "Encerra em 4 meses",
+    deadline: "Ends in 4 months",
   },
 ];
 
 const arcFeatures = [
   {
     icon: "⚡",
-    title: "Finalização em menos de 1s",
-    desc: "Liquidação determinística, sem espera por confirmações.",
+    title: "Sub-second finality",
+    desc: "Deterministic settlement, no waiting on confirmations.",
   },
   {
     icon: "💵",
     title: "USDC-native",
-    desc: "As próprias taxas de rede são pagas em USDC, sem token volátil.",
+    desc: "Network fees are paid in USDC itself, no volatile token.",
   },
   {
     icon: "🔗",
-    title: "Compatível com EVM",
-    desc: "Infraestrutura familiar, testada e usada por builders Web3.",
+    title: "EVM compatible",
+    desc: "Familiar infrastructure, battle-tested by Web3 builders.",
   },
   {
     icon: "🎯",
-    title: "Feita pra isso",
-    desc: "A Arc lista prediction markets como um dos seus casos de uso nativos.",
+    title: "Built for this",
+    desc: "Arc lists prediction markets as one of its native use cases.",
   },
 ];
 
 const steps = [
-  { icon: "🔮", title: "Preveja", desc: "Escolha um mercado e decida: SIM ou NÃO." },
-  { icon: "💰", title: "Aposte", desc: "Deposite USDC na posição escolhida." },
-  { icon: "✅", title: "Resolva", desc: "O mercado é liquidado com dados da Pyth." },
-  { icon: "🏆", title: "Ganhe", desc: "Acerte, ganhe USDC e suba no ranking com XP." },
+  { icon: "🔮", title: "Predict", desc: "Pick a market and decide: YES or NO." },
+  { icon: "💰", title: "Bet", desc: "Deposit USDC on your chosen position." },
+  { icon: "✅", title: "Resolve", desc: "The market settles using Pyth data." },
+  { icon: "🏆", title: "Earn", desc: "Get it right, earn USDC, climb the leaderboard." },
 ];
 
 const techStack = [
-  { label: "PYTH", desc: "Dados de mercado em tempo real e infraestrutura de oráculo." },
-  { label: "ARCDICTION", desc: "Contratos que definem a lógica dos mercados, de forma transparente." },
-  { label: "ARC", desc: "A camada de execução que dá liquidação rápida ao Arcdiction." },
-  { label: "USDC", desc: "A stablecoin usada para participação e liquidação." },
+  { label: "PYTH", desc: "Real-time market data and oracle infrastructure." },
+  { label: "ARCDICTION", desc: "Contracts that define market logic, transparently." },
+  { label: "ARC", desc: "The execution layer powering Arcdiction's settlement." },
+  { label: "USDC", desc: "The stablecoin used for participation and settlement." },
 ];
 
 export default function Home() {
@@ -74,22 +74,22 @@ export default function Home() {
       {/* HERO */}
       <div className="hero">
         <Header active="" />
-        <h1>Preveja. Ganhe XP. Suba no ranking.</h1>
+        <h1>Predict. Earn XP. Climb the ranks.</h1>
         <p>
-          Mercados resolvidos por Pyth, liquidez em USDC, jackpot comunitário
-          toda semana.
+          Markets resolved by Pyth, USDC liquidity, weekly community
+          jackpot.
         </p>
         <a href="/mercados" style={{ textDecoration: "none" }}>
-          <button className="btn-primary">Explorar mercados</button>
+          <button className="btn-primary">Explore markets</button>
         </a>
       </div>
 
       {/* LIVE MARKETS */}
       <section style={{ padding: "48px 24px", maxWidth: 960, margin: "0 auto" }}>
         <p style={{ fontSize: 13, fontWeight: 600, color: "#7fc9c4", marginBottom: 4 }}>
-          🔥 AO VIVO
+          🔥 LIVE
         </p>
-        <h2 style={{ fontSize: 26, margin: "0 0 24px" }}>Mercados em destaque</h2>
+        <h2 style={{ fontSize: 26, margin: "0 0 24px" }}>Featured markets</h2>
         <div className="markets">
           {markets.map((m) => (
             <a
@@ -104,12 +104,12 @@ export default function Home() {
                 </div>
                 <p className="question">{m.question}</p>
                 <div className="odds">
-                  <div className="yes">SIM · {m.yes}%</div>
-                  <div className="no">NÃO · {m.no}%</div>
+                  <div className="yes">YES · {m.yes}%</div>
+                  <div className="no">NO · {m.no}%</div>
                 </div>
                 <div className="market-card-meta">
-                  <span>Liquidez: {m.liquidity}</span>
-                  <span style={{ color: "#7fc9c4", fontWeight: 500 }}>Prever →</span>
+                  <span>Liquidity: {m.liquidity}</span>
+                  <span style={{ color: "#7fc9c4", fontWeight: 500 }}>Predict →</span>
                 </div>
               </div>
             </a>
@@ -120,7 +120,7 @@ export default function Home() {
       {/* HOW IT WORKS */}
       <section style={{ padding: "48px 24px", maxWidth: 960, margin: "0 auto" }}>
         <h2 style={{ fontSize: 26, margin: "0 0 24px", textAlign: "center" }}>
-          Como funciona
+          How it works
         </h2>
         <div
           style={{
@@ -149,13 +149,13 @@ export default function Home() {
       >
         <div style={{ maxWidth: 960, margin: "0 auto" }}>
           <p style={{ fontSize: 13, fontWeight: 600, color: "#7fc9c4", marginBottom: 4 }}>
-            🌐 INFRAESTRUTURA
+            🌐 INFRASTRUCTURE
           </p>
           <h2 style={{ fontSize: 26, margin: "0 0 8px" }}>Built on Arc</h2>
           <p style={{ color: "rgba(255,255,255,0.7)", marginBottom: 32, maxWidth: 560 }}>
-            Prediction markets desenhados para liquidação rápida e nativa em
-            stablecoin — a Arc lista mercados de previsão como um dos casos de
-            uso que a sua infraestrutura foi construída para suportar.
+            Prediction markets designed for fast, stablecoin-native
+            settlement — Arc lists prediction markets as one of the use
+            cases its infrastructure was built to support.
           </p>
           <div
             style={{
@@ -182,7 +182,7 @@ export default function Home() {
 
           <div style={{ marginTop: 32, textAlign: "center" }}>
             <p style={{ fontSize: 13, color: "rgba(255,255,255,0.6)", marginBottom: 12 }}>
-              Quer testar com USDC de testnet de verdade?
+              Want to try it with real testnet USDC?
             </p>
             <div style={{ display: "flex", gap: 8, justifyContent: "center", flexWrap: "wrap" }}>
               <a
@@ -198,7 +198,7 @@ export default function Home() {
                   textDecoration: "none",
                 }}
               >
-                Pegar USDC de teste (faucet oficial)
+                Get test USDC (official faucet)
               </a>
               <a
                 href="https://docs.arc.io/arc/references/connect-to-arc"
@@ -213,7 +213,7 @@ export default function Home() {
                   textDecoration: "none",
                 }}
               >
-                Adicionar Arc Testnet à wallet
+                Add Arc Testnet to wallet
               </a>
             </div>
           </div>
@@ -223,10 +223,10 @@ export default function Home() {
       {/* TECH BEHIND IT */}
       <section style={{ padding: "56px 24px", maxWidth: 960, margin: "0 auto" }}>
         <p style={{ fontSize: 13, fontWeight: 600, color: "#7fc9c4", marginBottom: 4 }}>
-          🔮 POR BAIXO DO CAPÔ
+          🔮 UNDER THE HOOD
         </p>
         <h2 style={{ fontSize: 26, margin: "0 0 32px" }}>
-          A tecnologia por trás do Arcdiction
+          The technology behind Arcdiction
         </h2>
 
         <div
