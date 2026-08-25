@@ -6,254 +6,252 @@ export default function Docs() {
       <Header active="Docs" />
       <div className="docs-layout">
         <div className="docs-sidebar">
-          <p className="docs-sidebar-label">COMEÇANDO</p>
-          <a href="#primeiros-passos" className="docs-sidebar-item docs-sidebar-item-active">Primeiros passos</a>
-          <a href="#conectar-wallet" className="docs-sidebar-item">Conectar wallet</a>
+          <p className="docs-sidebar-label">GETTING STARTED</p>
+          <a href="#first-steps" className="docs-sidebar-item docs-sidebar-item-active">First steps</a>
+          <a href="#connect-wallet" className="docs-sidebar-item">Connect wallet</a>
 
-          <p className="docs-sidebar-label">SOBRE</p>
-          <a href="#visao-geral" className="docs-sidebar-item">Visão geral</a>
-          <a href="#tecnologia" className="docs-sidebar-item">Tecnologia</a>
+          <p className="docs-sidebar-label">ABOUT</p>
+          <a href="#overview" className="docs-sidebar-item">Overview</a>
+          <a href="#technology" className="docs-sidebar-item">Technology</a>
 
-          <p className="docs-sidebar-label">MERCADOS</p>
-          <a href="#mercados-atuais" className="docs-sidebar-item">Mercados atuais</a>
-          <a href="#como-resolver-via-pyth" className="docs-sidebar-item">Como resolver via Pyth</a>
-          <a href="#disputa-e-arbitragem" className="docs-sidebar-item">Disputa e arbitragem</a>
+          <p className="docs-sidebar-label">MARKETS</p>
+          <a href="#current-markets" className="docs-sidebar-item">Current markets</a>
+          <a href="#how-pyth-resolves" className="docs-sidebar-item">How Pyth resolves markets</a>
+          <a href="#disputes" className="docs-sidebar-item">Disputes and arbitration</a>
 
-          <p className="docs-sidebar-label">GAMIFICAÇÃO</p>
-          <a href="#xp-e-niveis" className="docs-sidebar-item">XP e níveis</a>
-          <a href="#check-in-diario" className="docs-sidebar-item">Check-in diário</a>
-          <a href="#jackpot-semanal" className="docs-sidebar-item">Jackpot semanal</a>
+          <p className="docs-sidebar-label">GAMIFICATION</p>
+          <a href="#xp-and-levels" className="docs-sidebar-item">XP and levels</a>
+          <a href="#daily-checkin" className="docs-sidebar-item">Daily check-in</a>
+          <a href="#weekly-jackpot" className="docs-sidebar-item">Weekly jackpot</a>
 
           <p className="docs-sidebar-label">ROADMAP</p>
-          <a href="#fase-1" className="docs-sidebar-item">Fase 1 — MVP</a>
-          <a href="#fase-2" className="docs-sidebar-item">Fase 2 — Mercados por usuários</a>
+          <a href="#phase-1" className="docs-sidebar-item">Phase 1 — MVP</a>
+          <a href="#phase-2" className="docs-sidebar-item">Phase 2 — User-created markets</a>
 
-          <p className="docs-sidebar-label">SEGURANÇA</p>
-          <a href="#seguranca" className="docs-sidebar-item">Segurança e disputas</a>
+          <p className="docs-sidebar-label">SECURITY</p>
+          <a href="#security" className="docs-sidebar-item">Security and disputes</a>
 
-          <p className="docs-sidebar-label">AJUDA</p>
+          <p className="docs-sidebar-label">HELP</p>
           <a href="#faq" className="docs-sidebar-item">FAQ</a>
         </div>
 
         <div className="docs-content">
-          {/* COMEÇANDO */}
-          <section id="primeiros-passos">
-            <p style={{ color: "#7fc9c4", fontSize: 12, fontWeight: 500 }}>COMEÇANDO</p>
-            <h1>Primeiros passos</h1>
+          {/* GETTING STARTED */}
+          <section id="first-steps">
+            <p style={{ color: "#7fc9c4", fontSize: 12, fontWeight: 500 }}>GETTING STARTED</p>
+            <h1>First steps</h1>
             <p style={{ marginBottom: 16 }}>
-              Arcdiction é um prediction market gamificado construído na Arc, com
-              preços resolvidos pela Pyth e liquidez em USDC.
+              Arcdiction is a gamified prediction market built on Arc, with
+              prices resolved by Pyth and USDC liquidity.
             </p>
             <div className="docs-step">
-              <p>1. Conecte sua wallet</p>
-              <p>Use uma wallet compatível com EVM na rede Arc (testnet por enquanto).</p>
+              <p>1. Connect your wallet</p>
+              <p>Use an EVM-compatible wallet on the Arc network (testnet for now).</p>
             </div>
             <div className="docs-step">
-              <p>2. Escolha um mercado</p>
-              <p>Navegue pelas categorias e veja a probabilidade atual de SIM/NÃO.</p>
+              <p>2. Pick a market</p>
+              <p>Browse categories and see the current YES/NO probability.</p>
             </div>
             <div className="docs-step">
-              <p>3. Faça sua previsão</p>
-              <p>Deposite USDC (de teste) na posição escolhida e acompanhe seu XP subir.</p>
+              <p>3. Make your prediction</p>
+              <p>Deposit test USDC on your chosen position and watch your XP grow.</p>
             </div>
           </section>
 
-          <section id="conectar-wallet" style={{ marginTop: 40 }}>
-            <p style={{ color: "#7fc9c4", fontSize: 12, fontWeight: 500 }}>COMEÇANDO</p>
-            <h2>Conectar wallet</h2>
+          <section id="connect-wallet" style={{ marginTop: 40 }}>
+            <p style={{ color: "#7fc9c4", fontSize: 12, fontWeight: 500 }}>GETTING STARTED</p>
+            <h2>Connect wallet</h2>
             <p style={{ marginBottom: 16 }}>
-              Clique em "Conectar wallet" no topo da página. O Arcdiction suporta as
-              principais wallets EVM, como MetaMask e Rabby. Após conectar, sua
-              carteira fica vinculada ao seu perfil, XP e histórico de previsões.
-              Na Home, dentro da seção "Built on Arc", você encontra os links
-              oficiais para pegar USDC de teste no faucet da Circle e adicionar a
-              Arc Testnet na sua wallet.
+              Click "Connect wallet" at the top of the page. Arcdiction
+              supports the main EVM wallets, like MetaMask and Rabby. Once
+              connected, your wallet is linked to your profile, XP and
+              prediction history. On the Home page, inside the "Built on
+              Arc" section, you'll find official links to get test USDC
+              from the Circle faucet and add Arc Testnet to your wallet.
             </p>
           </section>
 
-          {/* SOBRE */}
-          <section id="visao-geral" style={{ marginTop: 40 }}>
-            <p style={{ color: "#7fc9c4", fontSize: 12, fontWeight: 500 }}>SOBRE</p>
-            <h2>Visão geral</h2>
+          {/* ABOUT */}
+          <section id="overview" style={{ marginTop: 40 }}>
+            <p style={{ color: "#7fc9c4", fontSize: 12, fontWeight: 500 }}>ABOUT</p>
+            <h2>Overview</h2>
             <p style={{ marginBottom: 16 }}>
-              Usuários fazem previsões sobre eventos reais — do mundo cripto ao
-              mundo esportivo e macroeconômico — apostando em resultados do tipo
-              "Sim" ou "Não". O Arcdiction vai além de um mercado de apostas
-              tradicional: transforma a experiência em um jogo, com progressão,
-              competição e recompensas contínuas.
+              Users make predictions on real-world events — from crypto to
+              sports to macroeconomics — betting on "Yes" or "No" outcomes.
+              Arcdiction goes beyond a traditional betting market: it turns
+              the experience into a game, with progression, competition and
+              ongoing rewards.
             </p>
             <p style={{ marginBottom: 16 }}>
-              Diferenciais: resolução via Pyth Network, liquidação em USDC com
-              infraestrutura da Circle, e uma camada de gamificação (XP, níveis,
-              check-in diário, jackpot semanal, ranking) que torna a experiência
-              recorrente e social.
+              Key differentiators: resolution via Pyth Network, USDC
+              settlement powered by Circle infrastructure, and a
+              gamification layer (XP, levels, daily check-in, weekly
+              jackpot, leaderboard) that keeps the experience recurring and
+              social.
             </p>
           </section>
 
-          <section id="tecnologia" style={{ marginTop: 40 }}>
-            <p style={{ color: "#7fc9c4", fontSize: 12, fontWeight: 500 }}>SOBRE</p>
-            <h2>Tecnologia</h2>
+          <section id="technology" style={{ marginTop: 40 }}>
+            <p style={{ color: "#7fc9c4", fontSize: 12, fontWeight: 500 }}>ABOUT</p>
+            <h2>Technology</h2>
             <div className="docs-step">
               <p>Arc</p>
-              <p>Infraestrutura onchain feita para stablecoins — finalização determinística em menos de 1 segundo e USDC como gas nativo.</p>
+              <p>Onchain infrastructure built for stablecoins — sub-second deterministic finality and USDC as native gas.</p>
             </div>
             <div className="docs-step">
               <p>Pyth Network</p>
-              <p>Oráculo — fornece dados de preço e eventos para resolver mercados de forma objetiva.</p>
+              <p>Oracle — provides price and event data to resolve markets objectively.</p>
             </div>
             <div className="docs-step">
               <p>USDC (Circle)</p>
-              <p>Stablecoin usada para apostas, liquidez e pagamentos.</p>
+              <p>The stablecoin used for bets, liquidity and payouts.</p>
             </div>
           </section>
 
-          {/* MERCADOS */}
-          <section id="mercados-atuais" style={{ marginTop: 40 }}>
-            <p style={{ color: "#7fc9c4", fontSize: 12, fontWeight: 500 }}>MERCADOS</p>
-            <h2>Mercados atuais</h2>
+          {/* MARKETS */}
+          <section id="current-markets" style={{ marginTop: 40 }}>
+            <p style={{ color: "#7fc9c4", fontSize: 12, fontWeight: 500 }}>MARKETS</p>
+            <h2>Current markets</h2>
             <div className="docs-step">
-              <p>BTC acima de $70k até 31/08?</p>
-              <p>Categoria: Cripto</p>
-            </div>
-            <div className="docs-step">
-              <p>Real Madrid vence a Champions?</p>
-              <p>Categoria: Esporte</p>
+              <p>BTC above $70k by Aug 31?</p>
+              <p>Category: Crypto</p>
             </div>
             <div className="docs-step">
-              <p>Fed corta juros dos EUA até dezembro?</p>
-              <p>Categoria: Macro</p>
+              <p>Real Madrid wins the Champions League?</p>
+              <p>Category: Sports</p>
+            </div>
+            <div className="docs-step">
+              <p>Fed cuts US rates by December?</p>
+              <p>Category: Macro</p>
             </div>
           </section>
 
-          <section id="como-resolver-via-pyth" style={{ marginTop: 40 }}>
-            <p style={{ color: "#7fc9c4", fontSize: 12, fontWeight: 500 }}>MERCADOS</p>
-            <h2>Como resolver via Pyth</h2>
+          <section id="how-pyth-resolves" style={{ marginTop: 40 }}>
+            <p style={{ color: "#7fc9c4", fontSize: 12, fontWeight: 500 }}>MARKETS</p>
+            <h2>How Pyth resolves markets</h2>
             <p style={{ marginBottom: 16 }}>
-              Quando o evento termina, o mercado é resolvido automaticamente com
-              base nos dados fornecidos pela Pyth, garantindo um resultado objetivo
-              e verificável.
+              When an event ends, the market is resolved automatically
+              based on data provided by Pyth, ensuring an objective and
+              verifiable outcome.
             </p>
           </section>
 
-          <section id="disputa-e-arbitragem" style={{ marginTop: 40 }}>
-            <p style={{ color: "#7fc9c4", fontSize: 12, fontWeight: 500 }}>MERCADOS</p>
-            <h2>Disputa e arbitragem</h2>
+          <section id="disputes" style={{ marginTop: 40 }}>
+            <p style={{ color: "#7fc9c4", fontSize: 12, fontWeight: 500 }}>MARKETS</p>
+            <h2>Disputes and arbitration</h2>
             <p style={{ marginBottom: 16 }}>
-              Caso haja divergência ou suspeita de erro na resolução, existe um
-              mecanismo de disputa, permitindo que o resultado seja contestado e
-              revisado antes da liquidação final dos pagamentos.
+              If there's a discrepancy or suspected error in a resolution,
+              a dispute mechanism lets the outcome be challenged and
+              reviewed before final settlement.
             </p>
           </section>
 
-          {/* GAMIFICAÇÃO */}
-          <section id="xp-e-niveis" style={{ marginTop: 40 }}>
-            <p style={{ color: "#7fc9c4", fontSize: 12, fontWeight: 500 }}>GAMIFICAÇÃO</p>
-            <h2>XP e níveis</h2>
+          {/* GAMIFICATION */}
+          <section id="xp-and-levels" style={{ marginTop: 40 }}>
+            <p style={{ color: "#7fc9c4", fontSize: 12, fontWeight: 500 }}>GAMIFICATION</p>
+            <h2>XP and levels</h2>
             <p style={{ marginBottom: 16 }}>
-              Você ganha XP a cada previsão feita e também fazendo check-in
-              diário. O XP acumulado define seu nível e sua posição no
-              leaderboard público da plataforma.
+              You earn XP for every prediction you make and for daily
+              check-ins. Your accumulated XP sets your level and your spot
+              on the public leaderboard.
             </p>
           </section>
 
-          <section id="check-in-diario" style={{ marginTop: 40 }}>
-            <p style={{ color: "#7fc9c4", fontSize: 12, fontWeight: 500 }}>GAMIFICAÇÃO</p>
-            <h2>Check-in diário</h2>
+          <section id="daily-checkin" style={{ marginTop: 40 }}>
+            <p style={{ color: "#7fc9c4", fontSize: 12, fontWeight: 500 }}>GAMIFICATION</p>
+            <h2>Daily check-in</h2>
             <p style={{ marginBottom: 16 }}>
-              No seu Perfil, você pode fazer check-in uma vez por dia. O XP
-              ganho cresce a cada dia consecutivo (1, 3, 5, 7 XP...) — mas se
-              você pular um dia, a sequência volta a começar do zero.
+              On your Profile page, you can check in once a day. The XP you
+              earn grows with each consecutive day (1, 3, 5, 7 XP...) — but
+              if you miss a day, the streak resets back to zero.
             </p>
           </section>
 
-          <section id="jackpot-semanal" style={{ marginTop: 40 }}>
-            <p style={{ color: "#7fc9c4", fontSize: 12, fontWeight: 500 }}>GAMIFICAÇÃO</p>
-            <h2>Jackpot semanal</h2>
+          <section id="weekly-jackpot" style={{ marginTop: 40 }}>
+            <p style={{ color: "#7fc9c4", fontSize: 12, fontWeight: 500 }}>GAMIFICATION</p>
+            <h2>Weekly jackpot</h2>
             <p style={{ marginBottom: 16 }}>
-              Uma porcentagem das taxas geradas nas apostas do Arcdiction
-              alimenta um jackpot comunitário. Toda semana, 10 pessoas são
-              premiadas com base no XP acumulado — quanto mais XP, maiores as
-              chances. Veja os detalhes na página de{" "}
-              <a href="/jackpot">Jackpot</a>.
+              A percentage of the fees generated by Arcdiction bets feeds a
+              community jackpot. Every week, 10 people are rewarded based
+              on accumulated XP — the more XP, the better the odds. See
+              details on the <a href="/jackpot">Jackpot</a> page.
             </p>
           </section>
 
           {/* ROADMAP */}
-          <section id="fase-1" style={{ marginTop: 40 }}>
+          <section id="phase-1" style={{ marginTop: 40 }}>
             <p style={{ color: "#7fc9c4", fontSize: 12, fontWeight: 500 }}>ROADMAP</p>
-            <h2>Fase 1 — MVP (atual)</h2>
+            <h2>Phase 1 — MVP (current)</h2>
             <div className="docs-step">
-              <p>Mercados iniciais</p>
-              <p>Cripto (BTC), Esporte (Champions League) e Macro (Fed), com mais categorias a caminho.</p>
+              <p>Initial markets</p>
+              <p>Crypto (BTC), Sports (Champions League) and Macro (Fed), with more categories on the way.</p>
             </div>
             <div className="docs-step">
-              <p>Formato</p>
-              <p>Mercados binários (Sim/Não), com liquidez inicial provida pela própria plataforma.</p>
+              <p>Format</p>
+              <p>Binary markets (Yes/No), with initial liquidity provided by the platform itself.</p>
             </div>
             <div className="docs-step">
-              <p>Resolução</p>
-              <p>Via Pyth, com mecanismo de disputa/arbitragem.</p>
+              <p>Resolution</p>
+              <p>Via Pyth, with a dispute/arbitration mechanism.</p>
             </div>
           </section>
 
-          <section id="fase-2" style={{ marginTop: 40 }}>
+          <section id="phase-2" style={{ marginTop: 40 }}>
             <p style={{ color: "#7fc9c4", fontSize: 12, fontWeight: 500 }}>ROADMAP</p>
-            <h2>Fase 2 — Mercados criados por usuários</h2>
+            <h2>Phase 2 — User-created markets</h2>
             <p style={{ marginBottom: 16 }}>
-              Usuários poderão criar seus próprios mercados de previsão
-              livremente, incluindo a definição das odds/porcentagens
-              iniciais. Para evitar o problema de resolução subjetiva, a
-              criação de mercados será limitada a ativos/dados que a Pyth
-              Network suporta (cripto, ações, índices). O criador do mercado
-              recebe uma porcentagem das taxas geradas por ele. Essa fase
-              também traz a liquidação de apostas diretamente via smart
-              contract na Arc, substituindo o banco de dados usado nesta
-              primeira fase de testes.
+              Users will be able to freely create their own prediction
+              markets, including setting initial odds/percentages. To avoid
+              subjective resolution, market creation will be limited to
+              assets/data supported by Pyth Network (crypto, equities,
+              indices). The market creator earns a percentage of the fees
+              it generates. This phase also brings bet settlement directly
+              via smart contract on Arc, replacing the database used in
+              this early testing phase.
             </p>
           </section>
 
-          {/* SEGURANÇA */}
-          <section id="seguranca" style={{ marginTop: 40 }}>
-            <p style={{ color: "#7fc9c4", fontSize: 12, fontWeight: 500 }}>SEGURANÇA</p>
-            <h2>Segurança e resolução de disputas</h2>
+          {/* SECURITY */}
+          <section id="security" style={{ marginTop: 40 }}>
+            <p style={{ color: "#7fc9c4", fontSize: 12, fontWeight: 500 }}>SECURITY</p>
+            <h2>Security and dispute resolution</h2>
             <p style={{ marginBottom: 16 }}>
-              Nesta fase de testes, os saldos e apostas são simulados (USDC de
-              teste), guardados de forma centralizada — não há movimentação
-              de fundos reais. Todos os mercados são resolvidos com base em
-              dados verificáveis via Pyth, minimizando resultados subjetivos.
-              (Prazo de disputa, quem arbitra em caso de contestação e
-              penalidades por disputas infundadas ainda estão em definição
-              para a fase com contratos on-chain.)
+              In this testing phase, balances and bets are simulated (test
+              USDC), stored centrally — no real funds move. All markets are
+              resolved based on verifiable Pyth data, minimizing subjective
+              outcomes. (Dispute window, who arbitrates contested cases,
+              and penalties for bad-faith disputes are still being defined
+              for the on-chain contract phase.)
             </p>
           </section>
 
           {/* FAQ */}
           <section id="faq" style={{ marginTop: 40 }}>
-            <p style={{ color: "#7fc9c4", fontSize: 12, fontWeight: 500 }}>AJUDA</p>
+            <p style={{ color: "#7fc9c4", fontSize: 12, fontWeight: 500 }}>HELP</p>
             <h2>FAQ</h2>
             <div className="docs-step">
-              <p>O que é o Arcdiction?</p>
-              <p>Uma plataforma de prediction markets gamificada, construída sobre a Arc.</p>
+              <p>What is Arcdiction?</p>
+              <p>A gamified prediction market platform, built on Arc.</p>
             </div>
             <div className="docs-step">
-              <p>Como os mercados são resolvidos?</p>
-              <p>Automaticamente, com base em dados da Pyth Network.</p>
+              <p>How are markets resolved?</p>
+              <p>Automatically, based on Pyth Network data.</p>
             </div>
             <div className="docs-step">
-              <p>Preciso ter USDC para participar?</p>
-              <p>Nesta fase de testes, cada wallet recebe automaticamente $10 de saldo simulado para apostar.</p>
+              <p>Do I need USDC to participate?</p>
+              <p>In this testing phase, every wallet automatically gets $10 of simulated balance to bet with.</p>
             </div>
             <div className="docs-step">
-              <p>Quais carteiras posso usar?</p>
-              <p>Carteiras compatíveis com Web3, como MetaMask e Rabby.</p>
+              <p>Which wallets can I use?</p>
+              <p>Any Web3-compatible wallet, like MetaMask and Rabby.</p>
             </div>
             <div className="docs-step">
-              <p>Como funciona o XP?</p>
-              <p>Você ganha XP fazendo previsões e check-in diário. O XP define seu nível e sua posição no leaderboard.</p>
+              <p>How does XP work?</p>
+              <p>You earn XP by making predictions and daily check-ins. XP sets your level and your leaderboard position.</p>
             </div>
             <div className="docs-step">
-              <p>Vou poder criar meus próprios mercados?</p>
-              <p>Sim — a partir da Fase 2, qualquer usuário poderá criar mercados, desde que baseados em ativos cobertos pela Pyth Network.</p>
+              <p>Will I be able to create my own markets?</p>
+              <p>Yes — starting in Phase 2, any user will be able to create markets, as long as they're based on assets covered by Pyth Network.</p>
             </div>
           </section>
         </div>
