@@ -6,13 +6,13 @@ import { supabase } from "../../lib/supabaseClient";
 
 const markets = [
   {
-    id: "btc-70k",
+    id: "btc-100k",
     category: "Crypto",
-    question: "BTC above $70k by Aug 31?",
-    baseYes: 380,
-    baseNo: 620,
+    question: "BTC above $100k by October 31?",
+    baseYes: 300,
+    baseNo: 700,
     liquidity: "4,200 USDC",
-    deadline: "Ends in 3 days",
+    deadline: "Ends in 2 months",
     xpReward: 120,
   },
   {
@@ -32,6 +32,16 @@ const markets = [
     baseYes: 350,
     baseNo: 650,
     liquidity: "900 USDC",
+    deadline: "Ends in 4 months",
+    xpReward: 120,
+  },
+  {
+    id: "pyth-10c",
+    category: "Crypto",
+    question: "PYTH above $0.10 by Dec 31?",
+    baseYes: 250,
+    baseNo: 750,
+    liquidity: "600 USDC",
     deadline: "Ends in 4 months",
     xpReward: 120,
   },
