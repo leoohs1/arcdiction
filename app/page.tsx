@@ -3,13 +3,13 @@ import { Header } from "../components/Header";
 
 const markets = [
   {
-    id: "btc-70k",
+    id: "btc-100k",
     category: "Crypto",
-    question: "BTC above $70k by Aug 31?",
-    yes: 38,
-    no: 62,
+    question: "BTC above $100k by October 31?",
+    yes: 30,
+    no: 70,
     liquidity: "4,200 USDC",
-    deadline: "Ends in 3 days",
+    deadline: "Ends in 2 months",
   },
   {
     id: "rm-champions",
@@ -27,6 +27,15 @@ const markets = [
     yes: 35,
     no: 65,
     liquidity: "900 USDC",
+    deadline: "Ends in 4 months",
+  },
+  {
+    id: "pyth-10c",
+    category: "Crypto",
+    question: "PYTH above $0.10 by Dec 31?",
+    yes: 25,
+    no: 75,
+    liquidity: "600 USDC",
     deadline: "Ends in 4 months",
   },
 ];
