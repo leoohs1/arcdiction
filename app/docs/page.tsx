@@ -113,7 +113,7 @@ export default function Docs() {
             <p style={{ color: "#7fc9c4", fontSize: 12, fontWeight: 500 }}>MARKETS</p>
             <h2>Current markets</h2>
             <div className="docs-step">
-              <p>BTC above $70k by Aug 31?</p>
+              <p>BTC above $100k by October 31?</p>
               <p>Category: Crypto</p>
             </div>
             <div className="docs-step">
@@ -123,6 +123,10 @@ export default function Docs() {
             <div className="docs-step">
               <p>Fed cuts US rates by December?</p>
               <p>Category: Macro</p>
+            </div>
+            <div className="docs-step">
+              <p>PYTH above $0.10 by Dec 31?</p>
+              <p>Category: Crypto</p>
             </div>
           </section>
 
