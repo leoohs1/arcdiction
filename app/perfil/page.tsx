@@ -5,9 +5,9 @@ import { Header } from "../../components/Header";
 import { supabase } from "../../lib/supabaseClient";
 
 const marketNames: Record<string, string> = {
-  "btc-70k": "BTC acima de $70k?",
-  "rm-champions": "Real Madrid vence a Champions?",
-  "fed-rate-cut": "Fed corta juros dos EUA?",
+  "btc-70k": "BTC above $70k?",
+  "rm-champions": "Real Madrid wins the Champions League?",
+  "fed-rate-cut": "Fed cuts US rates?",
 };
 
 function todayStr() {
@@ -105,12 +105,12 @@ export default function Perfil() {
     setCheckingIn(false);
 
     if (error) {
-      setCheckinMessage("Não foi possível fazer o check-in. Tente novamente.");
+      setCheckinMessage("Couldn't check in. Please try again.");
       return;
     }
 
     setProfile({ xp: newXp, streak_count: newStreak, last_checkin: today });
-    setCheckinMessage(`+${xpGained} XP! Sequência: ${newStreak} dia(s).`);
+    setCheckinMessage(`+${xpGained} XP! Streak: ${newStreak} day(s).`);
   }
 
   const alreadyCheckedInToday = profile?.last_checkin === todayStr();
@@ -118,11 +118,11 @@ export default function Perfil() {
   return (
     <main className="profile-page">
       <div style={{ padding: "0 0" }}>
-        <Header active="Perfil" />
+        <Header active="Profile" />
       </div>
 
       {!isConnected ? (
-        <p style={{ color: "#fff", padding: 24 }}>Conecte sua wallet para ver seu perfil.</p>
+        <p style={{ color: "#fff", padding: 24 }}>Connect your wallet to view your profile.</p>
       ) : (
         <>
           <div
@@ -143,7 +143,7 @@ export default function Perfil() {
                   {address ? short(address) : ""}
                 </p>
                 <p style={{ color: "rgba(255,255,255,0.6)", fontSize: 12, margin: 0 }}>
-                  {profile ? `${profile.xp} XP` : "Carregando..."}
+                  {profile ? `${profile.xp} XP` : "Loading..."}
                 </p>
               </div>
             </div>
@@ -155,10 +155,10 @@ export default function Perfil() {
                 disabled={checkingIn || alreadyCheckedInToday || !profile}
               >
                 {alreadyCheckedInToday
-                  ? "Check-in já feito hoje ✓"
+                  ? "Checked in today ✓"
                   : checkingIn
-                  ? "Registrando..."
-                  : "Fazer check-in diário"}
+                  ? "Checking in..."
+                  : "Daily check-in"}
               </button>
               {checkinMessage && (
                 <p style={{ color: "#7fc9c4", fontSize: 13, marginTop: 8 }}>{checkinMessage}</p>
@@ -169,32 +169,32 @@ export default function Perfil() {
           <div className="profile-stats">
             <div className="profile-stat-card">
               <p>{profile?.xp ?? "..."}</p>
-              <p>XP total</p>
+              <p>Total XP</p>
             </div>
             <div className="profile-stat-card">
               <p>{bets.length}</p>
-              <p>Previsões feitas</p>
+              <p>Predictions made</p>
             </div>
             <div className="profile-stat-card">
               <p>{profile?.streak_count ?? 0}</p>
-              <p>Sequência de check-in</p>
+              <p>Check-in streak</p>
             </div>
           </div>
 
           <div className="profile-history">
             <p style={{ color: "rgba(255,255,255,0.5)", fontSize: 11, fontWeight: 500, margin: "24px 0 10px" }}>
-              HISTÓRICO RECENTE
+              RECENT HISTORY
             </p>
             {bets.length === 0 && (
               <p style={{ color: "rgba(255,255,255,0.5)", fontSize: 13 }}>
-                Você ainda não fez nenhuma previsão.
+                You haven't made any predictions yet.
               </p>
             )}
             {bets.map((bet, i) => (
               <div className="profile-history-row" key={i}>
                 <span>{marketNames[bet.market_id] || bet.market_id}</span>
                 <span style={{ color: "#7fc9c4" }}>
-                  {bet.side === "yes" ? "SIM" : "NÃO"} · ${Number(bet.amount).toFixed(2)}
+                  {bet.side === "yes" ? "YES" : "NO"} · ${Number(bet.amount).toFixed(2)}
                 </span>
               </div>
             ))}
