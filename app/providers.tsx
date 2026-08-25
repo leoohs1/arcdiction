@@ -1,17 +1,28 @@
 "use client";
-
 import { WagmiProvider, createConfig, http } from "wagmi";
-import { mainnet } from "wagmi/chains";
+import { defineChain } from "viem";
 import { metaMask, injected } from "wagmi/connectors";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
-// Por enquanto usamos a rede "mainnet" só como placeholder técnico.
-// Quando entrarmos na parte dos contratos, trocamos isso pela rede
-// testnet da Arc de verdade.
+// Arc Testnet (Circle) — definida manualmente pois a versão do viem
+// usada no projeto ainda não traz essa rede embutida.
+export const arcTestnet = defineChain({
+  id: 5042002,
+  name: "Arc Testnet",
+  nativeCurrency: { decimals: 18, name: "USDC", symbol: "USDC" },
+  rpcUrls: {
+    default: { http: ["https://rpc.testnet.arc.io"] },
+  },
+  blockExplorers: {
+    default: { name: "ArcScan", url: "https://testnet.arcscan.app" },
+  },
+  testnet: true,
+});
+
 export const config = createConfig({
-  chains: [mainnet],
+  chains: [arcTestnet],
   connectors: [metaMask(), injected({ target: "rabby" })],
-  transports: { [mainnet.id]: http() },
+  transports: { [arcTestnet.id]: http() },
 });
 
 const queryClient = new QueryClient();
