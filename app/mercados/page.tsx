@@ -1,11 +1,10 @@
 "use client";
 import { useEffect, useState } from "react";
-import { useAccount } from "wagmi";
+import { useAccount, useWriteContract } from "wagmi";
 import { Header } from "../../components/Header";
 import { supabase } from "../../lib/supabaseClient";
 
 // baseYes/baseNo simulam a liquidez inicial do mercado (antes de apostas reais).
-// Servem só pra as odds não começarem em 0%/0% num mercado novo.
 const markets = [
   {
     id: "btc-70k",
@@ -41,10 +40,27 @@ const markets = [
 
 const STARTING_BALANCE = 10;
 
+// contrato de registro on-chain (Arc Testnet) — não guarda fundos, só loga eventos
+const BET_LOG_ADDRESS = "0xdb544E960ebB90F49C98b9801CB6e7f5ca1B97ab" as const;
+const BET_LOG_ABI = [
+  {
+    type: "function",
+    name: "recordBet",
+    stateMutability: "nonpayable",
+    inputs: [
+      { name: "marketId", type: "string" },
+      { name: "side", type: "bool" },
+      { name: "amount", type: "uint256" },
+    ],
+    outputs: [],
+  },
+] as const;
+
 type Totals = Record<string, { yes: number; no: number }>;
 
 export default function Mercados() {
   const { address, isConnected } = useAccount();
+  const { writeContractAsync } = useWriteContract();
   const [activeMarket, setActiveMarket] = useState<string | null>(null);
   const [side, setSide] = useState<"yes" | "no" | null>(null);
   const [amount, setAmount] = useState("");
@@ -55,6 +71,8 @@ export default function Mercados() {
   const [loadingOdds, setLoadingOdds] = useState(true);
   const [balance, setBalance] = useState<number | null>(null);
   const [xp, setXp] = useState<number | null>(null);
+  const [txHash, setTxHash] = useState<string | null>(null);
+  const [onchainStatus, setOnchainStatus] = useState<string>("");
 
   async function loadOdds() {
     setLoadingOdds(true);
@@ -127,6 +145,8 @@ export default function Mercados() {
   function openBet(marketId: string, chosenSide: "yes" | "no") {
     setError("");
     setSuccessId(null);
+    setTxHash(null);
+    setOnchainStatus("");
     setActiveMarket(marketId);
     setSide(chosenSide);
     setAmount("");
@@ -152,6 +172,7 @@ export default function Mercados() {
 
     setSubmitting(true);
     setError("");
+    setOnchainStatus("");
 
     const { error: insertError } = await supabase.from("bets").insert({
       wallet: address,
@@ -175,12 +196,32 @@ export default function Mercados() {
     setBalance(newBalance);
     setXp(newXp);
 
+    // tenta registrar a aposta também on-chain, na Arc Testnet.
+    // isso é um "bônus" — se falhar (rede errada, sem gas etc.), a aposta
+    // já foi salva normalmente, então não bloqueia o fluxo principal.
+    try {
+      setOnchainStatus("Registrando on-chain na Arc Testnet...");
+      const amountInCents = BigInt(Math.round(numericAmount * 100));
+      const hash = await writeContractAsync({
+        address: BET_LOG_ADDRESS,
+        abi: BET_LOG_ABI,
+        functionName: "recordBet",
+        args: [activeMarket as string, side === "yes", amountInCents],
+      });
+      setTxHash(hash);
+      setOnchainStatus("Registrado on-chain com sucesso!");
+    } catch (err) {
+      setOnchainStatus(
+        "Aposta salva, mas o registro on-chain falhou (verifique se sua wallet está na Arc Testnet com USDC de teste)."
+      );
+    }
+
     setSubmitting(false);
     setSuccessId(activeMarket);
     setActiveMarket(null);
     setSide(null);
     setAmount("");
-    loadOdds(); // recalcula as odds com a nova aposta
+    loadOdds();
   }
 
   return (
@@ -290,9 +331,29 @@ export default function Mercados() {
               )}
 
               {successId === m.id && (
-                <p style={{ marginTop: 12, fontSize: 13, color: "#2e7d32" }}>
-                  ✓ Aposta registrada com sucesso!
-                </p>
+                <div style={{ marginTop: 12 }}>
+                  <p style={{ fontSize: 13, color: "#2e7d32" }}>
+                    ✓ Aposta registrada com sucesso!
+                  </p>
+                  {onchainStatus && (
+                    <p style={{ fontSize: 12, color: "#5f5e5a", marginTop: 4 }}>
+                      {onchainStatus}
+                      {txHash && (
+                        <>
+                          {" "}
+                          <a
+                            href={`https://testnet.arcscan.app/tx/${txHash}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            style={{ color: "#7fc9c4" }}
+                          >
+                            Ver no explorador →
+                          </a>
+                        </>
+                      )}
+                    </p>
+                  )}
+                </div>
               )}
             </div>
           );
