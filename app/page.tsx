@@ -76,8 +76,8 @@ export default function Home() {
         <Header active="" />
         <h1>Predict. Earn XP. Climb the ranks.</h1>
         <p>
-          Markets resolved by Pyth, USDC liquidity, weekly community
-          jackpot.
+          Built on Arc. Markets resolved by Pyth, settled in USDC, weekly
+          community jackpot.
         </p>
         <a href="/mercados" style={{ textDecoration: "none" }}>
           <button className="btn-primary">Explore markets</button>
