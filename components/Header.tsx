@@ -2,8 +2,8 @@
 import Link from "next/link";
 import { ConnectWallet } from "./ConnectWallet";
 const links = [
-  { href: "/mercados", label: "Mercados" },
-  { href: "/perfil", label: "Perfil" },
+  { href: "/mercados", label: "Markets" },
+  { href: "/perfil", label: "Profile" },
   { href: "/leaderboard", label: "Leaderboard" },
   { href: "/jackpot", label: "Jackpot" },
   { href: "/docs", label: "Docs" },
