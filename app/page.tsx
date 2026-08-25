@@ -292,6 +292,33 @@ export default function Home() {
           ))}
         </div>
       </section>
+
+      {/* WHAT'S NEXT */}
+      <section style={{ padding: "48px 24px", maxWidth: 720, margin: "0 auto" }}>
+        <div
+          style={{
+            border: "1px solid #eee",
+            borderRadius: 14,
+            padding: 28,
+            textAlign: "center",
+          }}
+        >
+          <p style={{ fontSize: 13, fontWeight: 600, color: "#7fc9c4", marginBottom: 8 }}>
+            🚀 WHAT'S NEXT
+          </p>
+          <h2 style={{ fontSize: 22, margin: "0 0 8px" }}>
+            User-created markets
+          </h2>
+          <p style={{ fontSize: 14, color: "#5f5e5a", marginBottom: 16, maxWidth: 480, margin: "0 auto 16px" }}>
+            In Phase 2, anyone will be able to launch their own prediction
+            market on any asset covered by Pyth's 1,000+ price feeds —
+            resolved automatically, no subjective disputes.
+          </p>
+          <a href="/docs" style={{ color: "#7fc9c4", fontSize: 13, fontWeight: 600, textDecoration: "none" }}>
+            Read the full roadmap →
+          </a>
+        </div>
+      </section>
     </main>
   );
 }
