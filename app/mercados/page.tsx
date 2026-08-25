@@ -1,364 +1,288 @@
 "use client";
-import { useEffect, useState } from "react";
-import { useAccount, useWriteContract } from "wagmi";
-import { Header } from "../../components/Header";
-import { supabase } from "../../lib/supabaseClient";
+import { Header } from "../components/Header";
 
-// baseYes/baseNo simulam a liquidez inicial do mercado (antes de apostas reais).
 const markets = [
   {
     id: "btc-70k",
-    category: "Cripto",
-    question: "BTC acima de $70k até 31/08?",
-    baseYes: 380,
-    baseNo: 620,
-    liquidity: "4.200 USDC",
-    deadline: "Encerra em 3 dias",
-    xpReward: 120,
+    category: "Crypto",
+    question: "BTC above $70k by Aug 31?",
+    yes: 38,
+    no: 62,
+    liquidity: "4,200 USDC",
+    deadline: "Ends in 3 days",
   },
   {
     id: "rm-champions",
-    category: "Esporte",
-    question: "Real Madrid vence a Champions?",
-    baseYes: 410,
-    baseNo: 590,
-    liquidity: "1.850 USDC",
-    deadline: "Encerra em 12 dias",
-    xpReward: 120,
+    category: "Sports",
+    question: "Real Madrid wins the Champions League?",
+    yes: 41,
+    no: 59,
+    liquidity: "1,850 USDC",
+    deadline: "Ends in 12 days",
   },
   {
     id: "fed-rate-cut",
     category: "Macro",
-    question: "Fed corta juros dos EUA até dezembro?",
-    baseYes: 350,
-    baseNo: 650,
+    question: "Fed cuts US rates by December?",
+    yes: 35,
+    no: 65,
     liquidity: "900 USDC",
-    deadline: "Encerra em 4 meses",
-    xpReward: 120,
+    deadline: "Ends in 4 months",
   },
 ];
 
-const STARTING_BALANCE = 10;
-
-// contrato de registro on-chain (Arc Testnet) — não guarda fundos, só loga eventos
-const BET_LOG_ADDRESS = "0xdb544E960ebB90F49C98b9801CB6e7f5ca1B97ab" as const;
-const BET_LOG_ABI = [
+const arcFeatures = [
   {
-    type: "function",
-    name: "recordBet",
-    stateMutability: "nonpayable",
-    inputs: [
-      { name: "marketId", type: "string" },
-      { name: "side", type: "bool" },
-      { name: "amount", type: "uint256" },
-    ],
-    outputs: [],
+    icon: "⚡",
+    title: "Sub-second finality",
+    desc: "Deterministic settlement, no waiting on confirmations.",
   },
-] as const;
+  {
+    icon: "💵",
+    title: "USDC-native",
+    desc: "Network fees are paid in USDC itself, no volatile token.",
+  },
+  {
+    icon: "🔗",
+    title: "EVM compatible",
+    desc: "Familiar infrastructure, battle-tested by Web3 builders.",
+  },
+  {
+    icon: "🎯",
+    title: "Built for this",
+    desc: "Arc lists prediction markets as one of its native use cases.",
+  },
+];
 
-type Totals = Record<string, { yes: number; no: number }>;
+const steps = [
+  { icon: "🔮", title: "Predict", desc: "Pick a market and decide: YES or NO." },
+  { icon: "💰", title: "Bet", desc: "Deposit USDC on your chosen position." },
+  { icon: "✅", title: "Resolve", desc: "The market settles using Pyth data." },
+  { icon: "🏆", title: "Earn", desc: "Get it right, earn USDC, climb the leaderboard." },
+];
 
-export default function Mercados() {
-  const { address, isConnected } = useAccount();
-  const { writeContractAsync } = useWriteContract();
-  const [activeMarket, setActiveMarket] = useState<string | null>(null);
-  const [side, setSide] = useState<"yes" | "no" | null>(null);
-  const [amount, setAmount] = useState("");
-  const [submitting, setSubmitting] = useState(false);
-  const [successId, setSuccessId] = useState<string | null>(null);
-  const [error, setError] = useState("");
-  const [totals, setTotals] = useState<Totals>({});
-  const [loadingOdds, setLoadingOdds] = useState(true);
-  const [balance, setBalance] = useState<number | null>(null);
-  const [xp, setXp] = useState<number | null>(null);
-  const [txHash, setTxHash] = useState<string | null>(null);
-  const [onchainStatus, setOnchainStatus] = useState<string>("");
+const techStack = [
+  { label: "PYTH", desc: "Real-time market data and oracle infrastructure." },
+  { label: "ARCDICTION", desc: "Contracts that define market logic, transparently." },
+  { label: "ARC", desc: "The execution layer powering Arcdiction's settlement." },
+  { label: "USDC", desc: "The stablecoin used for participation and settlement." },
+];
 
-  async function loadOdds() {
-    setLoadingOdds(true);
-    const { data, error: fetchError } = await supabase
-      .from("bets")
-      .select("market_id, side, amount");
-
-    if (fetchError) {
-      setLoadingOdds(false);
-      return;
-    }
-
-    const next: Totals = {};
-    for (const m of markets) {
-      next[m.id] = { yes: m.baseYes, no: m.baseNo };
-    }
-    for (const bet of data || []) {
-      if (!next[bet.market_id]) continue;
-      if (bet.side === "yes") next[bet.market_id].yes += Number(bet.amount);
-      else next[bet.market_id].no += Number(bet.amount);
-    }
-    setTotals(next);
-    setLoadingOdds(false);
-  }
-
-  async function loadProfile(wallet: string) {
-    const { data, error: fetchError } = await supabase
-      .from("profiles")
-      .select("balance, xp")
-      .eq("wallet", wallet)
-      .maybeSingle();
-
-    if (fetchError) return;
-
-    if (!data) {
-      const { data: created } = await supabase
-        .from("profiles")
-        .insert({ wallet, balance: STARTING_BALANCE })
-        .select("balance, xp")
-        .single();
-      setBalance(created ? Number(created.balance) : STARTING_BALANCE);
-      setXp(created ? Number(created.xp) : 0);
-    } else {
-      setBalance(Number(data.balance));
-      setXp(Number(data.xp));
-    }
-  }
-
-  useEffect(() => {
-    loadOdds();
-  }, []);
-
-  useEffect(() => {
-    if (address) loadProfile(address);
-    else {
-      setBalance(null);
-      setXp(null);
-    }
-  }, [address]);
-
-  function oddsFor(marketId: string) {
-    const t = totals[marketId];
-    if (!t) return { yes: 50, no: 50 };
-    const total = t.yes + t.no;
-    if (total === 0) return { yes: 50, no: 50 };
-    const yes = Math.round((t.yes / total) * 100);
-    return { yes, no: 100 - yes };
-  }
-
-  function openBet(marketId: string, chosenSide: "yes" | "no") {
-    setError("");
-    setSuccessId(null);
-    setTxHash(null);
-    setOnchainStatus("");
-    setActiveMarket(marketId);
-    setSide(chosenSide);
-    setAmount("");
-  }
-
-  async function confirmBet() {
-    if (!address) {
-      setError("Conecte sua wallet primeiro.");
-      return;
-    }
-    const numericAmount = Number(amount);
-    if (!numericAmount || numericAmount <= 0) {
-      setError("Digite um valor válido em USDC.");
-      return;
-    }
-    if (balance !== null && numericAmount > balance) {
-      setError(`Saldo insuficiente. Você tem $${balance.toFixed(2)} disponível.`);
-      return;
-    }
-
-    const market = markets.find((m) => m.id === activeMarket);
-    const xpReward = market?.xpReward ?? 0;
-
-    setSubmitting(true);
-    setError("");
-    setOnchainStatus("");
-
-    const { error: insertError } = await supabase.from("bets").insert({
-      wallet: address,
-      market_id: activeMarket,
-      side,
-      amount: numericAmount,
-    });
-
-    if (insertError) {
-      setSubmitting(false);
-      setError("Não foi possível registrar a aposta. Tente novamente.");
-      return;
-    }
-
-    const newBalance = (balance ?? STARTING_BALANCE) - numericAmount;
-    const newXp = (xp ?? 0) + xpReward;
-    await supabase
-      .from("profiles")
-      .update({ balance: newBalance, xp: newXp })
-      .eq("wallet", address);
-    setBalance(newBalance);
-    setXp(newXp);
-
-    // tenta registrar a aposta também on-chain, na Arc Testnet.
-    // isso é um "bônus" — se falhar (rede errada, sem gas etc.), a aposta
-    // já foi salva normalmente, então não bloqueia o fluxo principal.
-    try {
-      setOnchainStatus("Registrando on-chain na Arc Testnet...");
-      const amountInCents = BigInt(Math.round(numericAmount * 100));
-      const hash = await writeContractAsync({
-        address: BET_LOG_ADDRESS,
-        abi: BET_LOG_ABI,
-        functionName: "recordBet",
-        args: [activeMarket as string, side === "yes", amountInCents],
-      });
-      setTxHash(hash);
-      setOnchainStatus("Registrado on-chain com sucesso!");
-    } catch (err) {
-      setOnchainStatus(
-        "Aposta salva, mas o registro on-chain falhou (verifique se sua wallet está na Arc Testnet com USDC de teste)."
-      );
-    }
-
-    setSubmitting(false);
-    setSuccessId(activeMarket);
-    setActiveMarket(null);
-    setSide(null);
-    setAmount("");
-    loadOdds();
-  }
-
+export default function Home() {
   return (
     <main>
-      <div className="page-hero">
-        <Header active="Mercados" />
-        <div className="page-hero-content">
-          <h1>Mercados</h1>
-          <p>Escolha um mercado e faça sua previsão</p>
-        </div>
+      {/* HERO */}
+      <div className="hero">
+        <Header active="" />
+        <h1>Predict. Earn XP. Climb the ranks.</h1>
+        <p>
+          Markets resolved by Pyth, USDC liquidity, weekly community
+          jackpot.
+        </p>
+        <a href="/mercados" style={{ textDecoration: "none" }}>
+          <button className="btn-primary">Explore markets</button>
+        </a>
       </div>
 
-      {isConnected && (
-        <div style={{ maxWidth: 720, margin: "0 auto 16px", padding: "0 16px" }}>
-          <p style={{ fontSize: 13, color: "#5f5e5a" }}>
-            Saldo de teste: <strong>{balance === null ? "..." : `$${balance.toFixed(2)}`}</strong>
-            {"  ·  "}
-            XP: <strong>{xp === null ? "..." : xp}</strong>
-          </p>
+      {/* LIVE MARKETS */}
+      <section style={{ padding: "48px 24px", maxWidth: 960, margin: "0 auto" }}>
+        <p style={{ fontSize: 13, fontWeight: 600, color: "#7fc9c4", marginBottom: 4 }}>
+          🔥 LIVE
+        </p>
+        <h2 style={{ fontSize: 26, margin: "0 0 24px" }}>Featured markets</h2>
+        <div className="markets">
+          {markets.map((m) => (
+            <a
+              href="/mercados"
+              key={m.id}
+              style={{ textDecoration: "none", color: "inherit" }}
+            >
+              <div className="market-card">
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                  <span className="tag">{m.category.toUpperCase()}</span>
+                  <span style={{ fontSize: 11, color: "#5f5e5a" }}>{m.deadline}</span>
+                </div>
+                <p className="question">{m.question}</p>
+                <div className="odds">
+                  <div className="yes">YES · {m.yes}%</div>
+                  <div className="no">NO · {m.no}%</div>
+                </div>
+                <div className="market-card-meta">
+                  <span>Liquidity: {m.liquidity}</span>
+                  <span style={{ color: "#7fc9c4", fontWeight: 500 }}>Predict →</span>
+                </div>
+              </div>
+            </a>
+          ))}
         </div>
-      )}
+      </section>
 
-      <div className="markets-list">
-        {markets.map((m) => {
-          const odds = oddsFor(m.id);
-          return (
-            <div className="market-card" key={m.id}>
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                <span className="tag">{m.category.toUpperCase()}</span>
-                <span style={{ fontSize: 11, color: "#5f5e5a" }}>{m.deadline}</span>
-              </div>
-              <p className="question">{m.question}</p>
-              <div className="odds">
-                <button
-                  className="yes"
-                  style={{ border: "none", cursor: "pointer", font: "inherit" }}
-                  onClick={() => openBet(m.id, "yes")}
-                >
-                  SIM · {loadingOdds ? "..." : `${odds.yes}%`}
-                </button>
-                <button
-                  className="no"
-                  style={{ border: "none", cursor: "pointer", font: "inherit" }}
-                  onClick={() => openBet(m.id, "no")}
-                >
-                  NÃO · {loadingOdds ? "..." : `${odds.no}%`}
-                </button>
-              </div>
-              <div className="market-card-meta">
-                <span>Liquidez: {m.liquidity}</span>
-                <span>+{m.xpReward} XP por previsão</span>
-              </div>
-
-              {activeMarket === m.id && (
-                <div style={{ marginTop: 12, padding: 12, background: "#f7f7f5", borderRadius: 8 }}>
-                  {!isConnected ? (
-                    <p style={{ fontSize: 13, color: "#b23b3b" }}>
-                      Conecte sua wallet para apostar.
-                    </p>
-                  ) : (
-                    <>
-                      <p style={{ fontSize: 13, marginBottom: 8 }}>
-                        Apostando em <strong>{side === "yes" ? "SIM" : "NÃO"}</strong>
-                      </p>
-                      <input
-                        type="number"
-                        placeholder="Valor em USDC"
-                        value={amount}
-                        onChange={(e) => setAmount(e.target.value)}
-                        style={{
-                          width: "100%",
-                          padding: "8px 10px",
-                          borderRadius: 6,
-                          border: "1px solid #ddd",
-                          marginBottom: 8,
-                          fontSize: 13,
-                        }}
-                      />
-                      <div style={{ display: "flex", gap: 8 }}>
-                        <button
-                          className="btn-primary"
-                          onClick={confirmBet}
-                          disabled={submitting}
-                          style={{ flex: 1 }}
-                        >
-                          {submitting ? "Enviando..." : "Confirmar aposta"}
-                        </button>
-                        <button
-                          onClick={() => setActiveMarket(null)}
-                          style={{
-                            padding: "8px 12px",
-                            background: "transparent",
-                            border: "1px solid #ddd",
-                            borderRadius: 6,
-                            cursor: "pointer",
-                          }}
-                        >
-                          Cancelar
-                        </button>
-                      </div>
-                    </>
-                  )}
-                  {error && (
-                    <p style={{ fontSize: 12, color: "#b23b3b", marginTop: 8 }}>{error}</p>
-                  )}
-                </div>
-              )}
-
-              {successId === m.id && (
-                <div style={{ marginTop: 12 }}>
-                  <p style={{ fontSize: 13, color: "#2e7d32" }}>
-                    ✓ Aposta registrada com sucesso!
-                  </p>
-                  {onchainStatus && (
-                    <p style={{ fontSize: 12, color: "#5f5e5a", marginTop: 4 }}>
-                      {onchainStatus}
-                      {txHash && (
-                        <>
-                          {" "}
-                          <a
-                            href={`https://testnet.arcscan.app/tx/${txHash}`}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            style={{ color: "#7fc9c4" }}
-                          >
-                            Ver no explorador →
-                          </a>
-                        </>
-                      )}
-                    </p>
-                  )}
-                </div>
-              )}
+      {/* HOW IT WORKS */}
+      <section style={{ padding: "48px 24px", maxWidth: 960, margin: "0 auto" }}>
+        <h2 style={{ fontSize: 26, margin: "0 0 24px", textAlign: "center" }}>
+          How it works
+        </h2>
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))",
+            gap: 16,
+          }}
+        >
+          {steps.map((s, i) => (
+            <div key={i} style={{ textAlign: "center", padding: 16 }}>
+              <div style={{ fontSize: 28, marginBottom: 8 }}>{s.icon}</div>
+              <p style={{ fontWeight: 600, marginBottom: 4 }}>{s.title}</p>
+              <p style={{ fontSize: 13, color: "#5f5e5a" }}>{s.desc}</p>
             </div>
-          );
-        })}
-      </div>
+          ))}
+        </div>
+      </section>
+
+      {/* POWERED BY ARC */}
+      <section
+        style={{
+          padding: "56px 24px",
+          background: "linear-gradient(135deg, #0a2540 0%, #123a5e 100%)",
+          color: "#fff",
+        }}
+      >
+        <div style={{ maxWidth: 960, margin: "0 auto" }}>
+          <p style={{ fontSize: 13, fontWeight: 600, color: "#7fc9c4", marginBottom: 4 }}>
+            🌐 INFRASTRUCTURE
+          </p>
+          <h2 style={{ fontSize: 26, margin: "0 0 8px" }}>Built on Arc</h2>
+          <p style={{ color: "rgba(255,255,255,0.7)", marginBottom: 32, maxWidth: 560 }}>
+            Prediction markets designed for fast, stablecoin-native
+            settlement — Arc lists prediction markets as one of the use
+            cases its infrastructure was built to support.
+          </p>
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
+              gap: 20,
+            }}
+          >
+            {arcFeatures.map((f, i) => (
+              <div
+                key={i}
+                style={{
+                  background: "rgba(255,255,255,0.06)",
+                  borderRadius: 12,
+                  padding: 20,
+                }}
+              >
+                <div style={{ fontSize: 24, marginBottom: 10 }}>{f.icon}</div>
+                <p style={{ fontWeight: 600, marginBottom: 6, fontSize: 14 }}>{f.title}</p>
+                <p style={{ fontSize: 13, color: "rgba(255,255,255,0.65)" }}>{f.desc}</p>
+              </div>
+            ))}
+          </div>
+
+          <div style={{ marginTop: 32, textAlign: "center" }}>
+            <p style={{ fontSize: 13, color: "rgba(255,255,255,0.6)", marginBottom: 12 }}>
+              Want to try it with real testnet USDC?
+            </p>
+            <div style={{ display: "flex", gap: 8, justifyContent: "center", flexWrap: "wrap" }}>
+              <a
+                href="https://faucet.circle.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{
+                  padding: "8px 12px",
+                  fontSize: 13,
+                  borderRadius: 6,
+                  border: "1px solid rgba(255,255,255,0.2)",
+                  color: "#fff",
+                  textDecoration: "none",
+                }}
+              >
+                Get test USDC (official faucet)
+              </a>
+              <a
+                href="https://docs.arc.io/arc/references/connect-to-arc"
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{
+                  padding: "8px 12px",
+                  fontSize: 13,
+                  borderRadius: 6,
+                  border: "1px solid rgba(255,255,255,0.2)",
+                  color: "#fff",
+                  textDecoration: "none",
+                }}
+              >
+                Add Arc Testnet to wallet
+              </a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* TECH BEHIND IT */}
+      <section style={{ padding: "56px 24px", maxWidth: 960, margin: "0 auto" }}>
+        <p style={{ fontSize: 13, fontWeight: 600, color: "#7fc9c4", marginBottom: 4 }}>
+          🔮 UNDER THE HOOD
+        </p>
+        <h2 style={{ fontSize: 26, margin: "0 0 32px" }}>
+          The technology behind Arcdiction
+        </h2>
+
+        <div
+          style={{
+            display: "flex",
+            flexWrap: "wrap",
+            alignItems: "center",
+            justifyContent: "center",
+            gap: 8,
+            marginBottom: 40,
+            fontSize: 13,
+            fontWeight: 600,
+            color: "#0a2540",
+          }}
+        >
+          {techStack.map((t, i) => (
+            <span key={i} style={{ display: "flex", alignItems: "center", gap: 8 }}>
+              <span
+                style={{
+                  background: "#eef4fb",
+                  padding: "8px 14px",
+                  borderRadius: 8,
+                  border: "1px solid #d6e4f0",
+                }}
+              >
+                {t.label}
+              </span>
+              {i < techStack.length - 1 && <span style={{ color: "#9aa5b1" }}>→</span>}
+            </span>
+          ))}
+        </div>
+
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
+            gap: 16,
+          }}
+        >
+          {techStack.map((t, i) => (
+            <div
+              key={i}
+              style={{
+                border: "1px solid #eee",
+                borderRadius: 10,
+                padding: 16,
+              }}
+            >
+              <p style={{ fontSize: 11, fontWeight: 700, color: "#7fc9c4", marginBottom: 6 }}>
+                {t.label}
+              </p>
+              <p style={{ fontSize: 13, color: "#5f5e5a" }}>{t.desc}</p>
+            </div>
+          ))}
+        </div>
+      </section>
     </main>
   );
 }
