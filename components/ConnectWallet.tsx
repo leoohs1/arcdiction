@@ -1,32 +1,26 @@
 "use client";
-
 import { useState } from "react";
 import { useAccount, useConnect, useDisconnect } from "wagmi";
-
 function short(address: string) {
   return `${address.slice(0, 6)}...${address.slice(-4)}`;
 }
-
 export function ConnectWallet() {
   const { address, isConnected } = useAccount();
   const { connectors, connect } = useConnect();
   const { disconnect } = useDisconnect();
   const [open, setOpen] = useState(false);
-
   if (isConnected && address) {
     return (
       <button className="btn-primary" onClick={() => disconnect()}>
-        {short(address)} · Sair
+        {short(address)} · Disconnect
       </button>
     );
   }
-
   return (
     <div style={{ position: "relative" }}>
       <button className="btn-primary" onClick={() => setOpen(!open)}>
-        Conectar wallet
+        Connect wallet
       </button>
-
       {open && (
         <div
           style={{
