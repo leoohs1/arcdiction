@@ -5,9 +5,11 @@ import { Header } from "../../components/Header";
 import { supabase } from "../../lib/supabaseClient";
 
 const marketNames: Record<string, string> = {
-  "btc-70k": "BTC above $70k?",
+  "btc-70k": "BTC above $70k? (closed)",
+  "btc-100k": "BTC above $100k?",
   "rm-champions": "Real Madrid wins the Champions League?",
   "fed-rate-cut": "Fed cuts US rates?",
+  "pyth-10c": "PYTH above $0.10?",
 };
 
 function todayStr() {
