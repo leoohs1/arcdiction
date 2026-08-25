@@ -9,7 +9,6 @@ function short(address: string) {
   return `${address.slice(0, 6)}...${address.slice(-4)}`;
 }
 
-// nível simples derivado do XP total — 1 nível a cada 200 XP
 function levelFromXp(xp: number) {
   return Math.floor(xp / 200) + 1;
 }
@@ -43,17 +42,17 @@ export default function Leaderboard() {
         <div className="page-hero-content">
           <h1>Leaderboard</h1>
           <p>
-            Ranking por XP da comunidade ·{" "}
+            Community XP ranking ·{" "}
             <a href="/jackpot" style={{ color: "inherit" }}>
-              ver jackpot semanal →
+              see weekly jackpot →
             </a>
           </p>
         </div>
       </div>
       <div className="leaderboard-list">
-        {loading && <p style={{ padding: 16 }}>Carregando ranking...</p>}
+        {loading && <p style={{ padding: 16 }}>Loading ranking...</p>}
         {!loading && ranking.length === 0 && (
-          <p style={{ padding: 16 }}>Ainda não há previsões registradas.</p>
+          <p style={{ padding: 16 }}>No predictions recorded yet.</p>
         )}
         {ranking.map((r, i) => (
           <div className="leaderboard-row" key={r.wallet}>
@@ -65,7 +64,7 @@ export default function Leaderboard() {
               {r.wallet.slice(2, 4).toUpperCase()}
             </div>
             <span className="leaderboard-address">{short(r.wallet)}</span>
-            <span className="leaderboard-level">Nível {levelFromXp(r.xp)}</span>
+            <span className="leaderboard-level">Level {levelFromXp(r.xp)}</span>
             <span className="leaderboard-xp">{r.xp} XP</span>
           </div>
         ))}
