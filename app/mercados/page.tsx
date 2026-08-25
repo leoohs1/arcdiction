@@ -81,6 +81,22 @@ export default function Mercados() {
   const [xp, setXp] = useState<number | null>(null);
   const [txHash, setTxHash] = useState<string | null>(null);
   const [onchainStatus, setOnchainStatus] = useState<string>("");
+  const [btcPrice, setBtcPrice] = useState<number | null>(null);
+
+  useEffect(() => {
+    async function loadBtcPrice() {
+      try {
+        const res = await fetch("/api/pyth-price");
+        const data = await res.json();
+        if (data.price) setBtcPrice(data.price);
+      } catch (err) {
+        // silencioso — se falhar, só não mostra o preço ao vivo
+      }
+    }
+    loadBtcPrice();
+    const interval = setInterval(loadBtcPrice, 30000); // atualiza a cada 30s
+    return () => clearInterval(interval);
+  }, []);
 
   async function loadOdds() {
     setLoadingOdds(true);
@@ -259,6 +275,12 @@ export default function Mercados() {
                 <span style={{ fontSize: 11, color: "#5f5e5a" }}>{m.deadline}</span>
               </div>
               <p className="question">{m.question}</p>
+              {m.id === "btc-100k" && btcPrice !== null && (
+                <p style={{ fontSize: 12, color: "#7fc9c4", marginBottom: 8 }}>
+                  Live BTC price: ${btcPrice.toLocaleString(undefined, { maximumFractionDigits: 0 })}{" "}
+                  <span style={{ color: "#9aa5b1" }}>(via Pyth)</span>
+                </p>
+              )}
               <div className="odds">
                 <button
                   className="yes"
