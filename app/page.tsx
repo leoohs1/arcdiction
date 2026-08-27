@@ -40,6 +40,14 @@ const markets = [
   },
 ];
 
+const CATEGORY_COLORS: Record<string, { bg: string; text: string }> = {
+  Crypto: { bg: "#E6F1FB", text: "#0C447C" },
+  Sports: { bg: "#EAF3DE", text: "#27500A" },
+  Esports: { bg: "#EEEDFE", text: "#26215C" },
+  Politics: { bg: "#FAECE7", text: "#712B13" },
+  Macro: { bg: "#FAEEDA", text: "#633806" },
+};
+
 const arcFeatures = [
   {
     icon: "⚡",
@@ -108,13 +116,47 @@ export default function Home() {
             >
               <div className="market-card">
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                  <span className="tag">{m.category.toUpperCase()}</span>
+                  <span
+                    className="tag"
+                    style={{
+                      background: CATEGORY_COLORS[m.category]?.bg,
+                      color: CATEGORY_COLORS[m.category]?.text,
+                    }}
+                  >
+                    {m.category.toUpperCase()}
+                  </span>
                   <span style={{ fontSize: 11, color: "#5f5e5a" }}>{m.deadline}</span>
                 </div>
                 <p className="question">{m.question}</p>
-                <div className="odds">
-                  <div className="yes">YES · {m.yes}%</div>
-                  <div className="no">NO · {m.no}%</div>
+                <div className="odds" style={{ display: "flex", borderRadius: 8, overflow: "hidden", height: 40 }}>
+                  <div
+                    style={{
+                      flex: Math.max(m.yes, 8),
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      background: "#0a2540",
+                      color: "#fff",
+                      fontWeight: 500,
+                      fontSize: 14,
+                    }}
+                  >
+                    YES · {m.yes}%
+                  </div>
+                  <div
+                    style={{
+                      flex: Math.max(m.no, 8),
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      background: "#f1efe8",
+                      color: "#2c2c2a",
+                      fontWeight: 500,
+                      fontSize: 14,
+                    }}
+                  >
+                    NO · {m.no}%
+                  </div>
                 </div>
                 <div className="market-card-meta">
                   <span>Liquidity: {m.liquidity}</span>
