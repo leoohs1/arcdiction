@@ -117,16 +117,44 @@ export default function Docs() {
               <p>Category: Crypto</p>
             </div>
             <div className="docs-step">
+              <p>PYTH above $0.10 by Dec 31?</p>
+              <p>Category: Crypto</p>
+            </div>
+            <div className="docs-step">
+              <p>ETH above $3,000 by Dec 31?</p>
+              <p>Category: Crypto</p>
+            </div>
+            <div className="docs-step">
+              <p>SOL above $120 by Dec 31?</p>
+              <p>Category: Crypto</p>
+            </div>
+            <div className="docs-step">
+              <p>HYPE above $100 by Dec 31?</p>
+              <p>Category: Crypto</p>
+            </div>
+            <div className="docs-step">
               <p>Real Madrid wins the Champions League?</p>
               <p>Category: Sports</p>
             </div>
             <div className="docs-step">
-              <p>Fed cuts US rates by December?</p>
-              <p>Category: Macro</p>
+              <p>Thunder win the 2026-27 NBA championship?</p>
+              <p>Category: Sports</p>
             </div>
             <div className="docs-step">
-              <p>PYTH above $0.10 by Dec 31?</p>
-              <p>Category: Crypto</p>
+              <p>Rams win Super Bowl LXI?</p>
+              <p>Category: Sports</p>
+            </div>
+            <div className="docs-step">
+              <p>T1 wins 2026 LoL Worlds (4th straight title)?</p>
+              <p>Category: Esports</p>
+            </div>
+            <div className="docs-step">
+              <p>Democrats win House majority in 2026 midterms?</p>
+              <p>Category: Politics</p>
+            </div>
+            <div className="docs-step">
+              <p>Fed cuts US rates by December?</p>
+              <p>Category: Macro</p>
             </div>
           </section>
 
