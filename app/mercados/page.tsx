@@ -6,6 +6,14 @@ import { supabase } from "../../lib/supabaseClient";
 
 const CATEGORIES = ["All", "Crypto", "Sports", "Esports", "Politics", "Macro"];
 
+const CATEGORY_COLORS: Record<string, { bg: string; text: string }> = {
+  Crypto: { bg: "#E6F1FB", text: "#0C447C" },
+  Sports: { bg: "#EAF3DE", text: "#27500A" },
+  Esports: { bg: "#EEEDFE", text: "#26215C" },
+  Politics: { bg: "#FAECE7", text: "#712B13" },
+  Macro: { bg: "#FAEEDA", text: "#633806" },
+};
+
 const markets = [
   {
     id: "btc-100k",
@@ -396,7 +404,15 @@ export default function Mercados() {
           return (
             <div className="market-card" key={m.id}>
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                <span className="tag">{m.category.toUpperCase()}</span>
+                <span
+                  className="tag"
+                  style={{
+                    background: CATEGORY_COLORS[m.category]?.bg,
+                    color: CATEGORY_COLORS[m.category]?.text,
+                  }}
+                >
+                  {m.category.toUpperCase()}
+                </span>
                 <span style={{ fontSize: 11, color: "#5f5e5a" }}>{m.deadline}</span>
               </div>
               <p className="question">{m.question}</p>
