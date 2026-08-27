@@ -4,6 +4,8 @@ import { useAccount, useWriteContract } from "wagmi";
 import { Header } from "../../components/Header";
 import { supabase } from "../../lib/supabaseClient";
 
+const CATEGORIES = ["All", "Crypto", "Sports", "Esports", "Politics", "Macro"];
+
 const markets = [
   {
     id: "btc-100k",
@@ -13,6 +15,46 @@ const markets = [
     baseNo: 700,
     liquidity: "4,200 USDC",
     deadline: "Ends in 2 months",
+    xpReward: 120,
+  },
+  {
+    id: "pyth-10c",
+    category: "Crypto",
+    question: "PYTH above $0.10 by Dec 31?",
+    baseYes: 250,
+    baseNo: 750,
+    liquidity: "600 USDC",
+    deadline: "Ends in 4 months",
+    xpReward: 120,
+  },
+  {
+    id: "eth-3k",
+    category: "Crypto",
+    question: "ETH above $3,000 by Dec 31?",
+    baseYes: 300,
+    baseNo: 700,
+    liquidity: "3,100 USDC",
+    deadline: "Ends in 4 months",
+    xpReward: 120,
+  },
+  {
+    id: "sol-120",
+    category: "Crypto",
+    question: "SOL above $120 by Dec 31?",
+    baseYes: 280,
+    baseNo: 720,
+    liquidity: "2,400 USDC",
+    deadline: "Ends in 4 months",
+    xpReward: 120,
+  },
+  {
+    id: "hype-100",
+    category: "Crypto",
+    question: "HYPE above $100 by Dec 31?",
+    baseYes: 250,
+    baseNo: 750,
+    liquidity: "1,200 USDC",
+    deadline: "Ends in 4 months",
     xpReward: 120,
   },
   {
@@ -26,22 +68,52 @@ const markets = [
     xpReward: 120,
   },
   {
+    id: "nba-thunder",
+    category: "Sports",
+    question: "Thunder win the 2026-27 NBA championship?",
+    baseYes: 270,
+    baseNo: 730,
+    liquidity: "2,800 USDC",
+    deadline: "Ends in 10 months",
+    xpReward: 120,
+  },
+  {
+    id: "nfl-rams",
+    category: "Sports",
+    question: "Rams win Super Bowl LXI?",
+    baseYes: 160,
+    baseNo: 840,
+    liquidity: "2,100 USDC",
+    deadline: "Ends in 6 months",
+    xpReward: 120,
+  },
+  {
+    id: "lol-t1-4peat",
+    category: "Esports",
+    question: "T1 wins 2026 LoL Worlds (4th straight title)?",
+    baseYes: 250,
+    baseNo: 750,
+    liquidity: "950 USDC",
+    deadline: "Ends in 3 months",
+    xpReward: 120,
+  },
+  {
+    id: "midterms-house",
+    category: "Politics",
+    question: "Democrats win House majority in 2026 midterms?",
+    baseYes: 750,
+    baseNo: 250,
+    liquidity: "3,500 USDC",
+    deadline: "Ends in 2 months",
+    xpReward: 120,
+  },
+  {
     id: "fed-rate-cut",
     category: "Macro",
     question: "Fed cuts US rates by December?",
     baseYes: 350,
     baseNo: 650,
     liquidity: "900 USDC",
-    deadline: "Ends in 4 months",
-    xpReward: 120,
-  },
-  {
-    id: "pyth-10c",
-    category: "Crypto",
-    question: "PYTH above $0.10 by Dec 31?",
-    baseYes: 250,
-    baseNo: 750,
-    liquidity: "600 USDC",
     deadline: "Ends in 4 months",
     xpReward: 120,
   },
@@ -69,6 +141,7 @@ type Totals = Record<string, { yes: number; no: number }>;
 export default function Mercados() {
   const { address, isConnected } = useAccount();
   const { writeContractAsync } = useWriteContract();
+  const [selectedCategory, setSelectedCategory] = useState("All");
   const [activeMarket, setActiveMarket] = useState<string | null>(null);
   const [side, setSide] = useState<"yes" | "no" | null>(null);
   const [amount, setAmount] = useState("");
@@ -82,19 +155,25 @@ export default function Mercados() {
   const [txHash, setTxHash] = useState<string | null>(null);
   const [onchainStatus, setOnchainStatus] = useState<string>("");
   const [btcPrice, setBtcPrice] = useState<number | null>(null);
+  const [pythPrice, setPythPrice] = useState<number | null>(null);
 
   useEffect(() => {
-    async function loadBtcPrice() {
+    async function loadPrices() {
       try {
-        const res = await fetch("/api/pyth-price");
-        const data = await res.json();
-        if (data.price) setBtcPrice(data.price);
+        const [btcRes, pythRes] = await Promise.all([
+          fetch("/api/pyth-price?asset=btc"),
+          fetch("/api/pyth-price?asset=pyth"),
+        ]);
+        const btcData = await btcRes.json();
+        const pythData = await pythRes.json();
+        if (btcData.price) setBtcPrice(btcData.price);
+        if (pythData.price) setPythPrice(pythData.price);
       } catch (err) {
         // silencioso — se falhar, só não mostra o preço ao vivo
       }
     }
-    loadBtcPrice();
-    const interval = setInterval(loadBtcPrice, 30000); // atualiza a cada 30s
+    loadPrices();
+    const interval = setInterval(loadPrices, 30000); // atualiza a cada 30s
     return () => clearInterval(interval);
   }, []);
 
@@ -245,6 +324,11 @@ export default function Mercados() {
     loadOdds();
   }
 
+  const visibleMarkets =
+    selectedCategory === "All"
+      ? markets
+      : markets.filter((m) => m.category === selectedCategory);
+
   return (
     <main>
       <div className="page-hero">
@@ -265,8 +349,39 @@ export default function Mercados() {
         </div>
       )}
 
+      {/* CATEGORY TABS */}
+      <div
+        style={{
+          maxWidth: 720,
+          margin: "0 auto 24px",
+          padding: "0 16px",
+          display: "flex",
+          gap: 8,
+          flexWrap: "wrap",
+        }}
+      >
+        {CATEGORIES.map((cat) => (
+          <button
+            key={cat}
+            onClick={() => setSelectedCategory(cat)}
+            style={{
+              padding: "6px 14px",
+              borderRadius: 999,
+              fontSize: 13,
+              fontWeight: 500,
+              border: selectedCategory === cat ? "1px solid #0a2540" : "1px solid #ddd",
+              background: selectedCategory === cat ? "#0a2540" : "transparent",
+              color: selectedCategory === cat ? "#fff" : "#0a2540",
+              cursor: "pointer",
+            }}
+          >
+            {cat}
+          </button>
+        ))}
+      </div>
+
       <div className="markets-list">
-        {markets.map((m) => {
+        {visibleMarkets.map((m) => {
           const odds = oddsFor(m.id);
           return (
             <div className="market-card" key={m.id}>
@@ -278,6 +393,12 @@ export default function Mercados() {
               {m.id === "btc-100k" && btcPrice !== null && (
                 <p style={{ fontSize: 12, color: "#7fc9c4", marginBottom: 8 }}>
                   Live BTC price: ${btcPrice.toLocaleString(undefined, { maximumFractionDigits: 0 })}{" "}
+                  <span style={{ color: "#9aa5b1" }}>(via Pyth)</span>
+                </p>
+              )}
+              {m.id === "pyth-10c" && pythPrice !== null && (
+                <p style={{ fontSize: 12, color: "#7fc9c4", marginBottom: 8 }}>
+                  Live PYTH price: ${pythPrice.toFixed(4)}{" "}
                   <span style={{ color: "#9aa5b1" }}>(via Pyth)</span>
                 </p>
               )}
