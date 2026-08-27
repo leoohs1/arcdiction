@@ -380,7 +380,17 @@ export default function Mercados() {
         ))}
       </div>
 
-      <div className="markets-list">
+      <div
+        className="markets-list"
+        style={{
+          display: "grid",
+          gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
+          gap: 16,
+          maxWidth: 960,
+          margin: "0 auto",
+          padding: "0 16px",
+        }}
+      >
         {visibleMarkets.map((m) => {
           const odds = oddsFor(m.id);
           return (
