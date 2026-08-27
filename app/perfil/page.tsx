@@ -7,9 +7,16 @@ import { supabase } from "../../lib/supabaseClient";
 const marketNames: Record<string, string> = {
   "btc-70k": "BTC above $70k? (closed)",
   "btc-100k": "BTC above $100k?",
-  "rm-champions": "Real Madrid wins the Champions League?",
-  "fed-rate-cut": "Fed cuts US rates?",
   "pyth-10c": "PYTH above $0.10?",
+  "eth-3k": "ETH above $3,000?",
+  "sol-120": "SOL above $120?",
+  "hype-100": "HYPE above $100?",
+  "rm-champions": "Real Madrid wins the Champions League?",
+  "nba-thunder": "Thunder win the NBA championship?",
+  "nfl-rams": "Rams win Super Bowl LXI?",
+  "lol-t1-4peat": "T1 wins LoL Worlds (4-peat)?",
+  "midterms-house": "Democrats win House majority?",
+  "fed-rate-cut": "Fed cuts US rates?",
 };
 
 function todayStr() {
