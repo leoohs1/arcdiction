@@ -338,7 +338,7 @@ export default function Mercados() {
       : markets.filter((m) => m.category === selectedCategory);
 
   return (
-    <main>
+    <main style={{ background: "#f4f3ef", minHeight: "100vh" }}>
       <div className="page-hero">
         <Header active="Markets" />
         <div className="page-hero-content">
@@ -401,8 +401,16 @@ export default function Mercados() {
       >
         {visibleMarkets.map((m) => {
           const odds = oddsFor(m.id);
+          const catColor = CATEGORY_COLORS[m.category]?.text || "#0a2540";
           return (
-            <div className="market-card" key={m.id}>
+            <div
+              className="market-card"
+              key={m.id}
+              style={{
+                borderLeft: `3px solid ${catColor}`,
+                boxShadow: "0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04)",
+              }}
+            >
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                 <span
                   className="tag"
@@ -428,18 +436,34 @@ export default function Mercados() {
                   <span style={{ color: "#9aa5b1" }}>(via Pyth)</span>
                 </p>
               )}
-              <div className="odds">
+              <div className="odds" style={{ display: "flex", borderRadius: 8, overflow: "hidden", height: 40 }}>
                 <button
-                  className="yes"
-                  style={{ border: "none", cursor: "pointer", font: "inherit" }}
                   onClick={() => openBet(m.id, "yes")}
+                  style={{
+                    flex: Math.max(odds.yes, 8),
+                    border: "none",
+                    cursor: "pointer",
+                    font: "inherit",
+                    background: "#639922",
+                    color: "#fff",
+                    fontWeight: 500,
+                    fontSize: 14,
+                  }}
                 >
                   YES · {loadingOdds ? "..." : `${odds.yes}%`}
                 </button>
                 <button
-                  className="no"
-                  style={{ border: "none", cursor: "pointer", font: "inherit" }}
                   onClick={() => openBet(m.id, "no")}
+                  style={{
+                    flex: Math.max(odds.no, 8),
+                    border: "none",
+                    cursor: "pointer",
+                    font: "inherit",
+                    background: "#f1efe8",
+                    color: "#2c2c2a",
+                    fontWeight: 500,
+                    fontSize: 14,
+                  }}
                 >
                   NO · {loadingOdds ? "..." : `${odds.no}%`}
                 </button>
@@ -533,6 +557,7 @@ export default function Mercados() {
           );
         })}
       </div>
+      <div style={{ height: 40 }} />
     </main>
   );
 }
