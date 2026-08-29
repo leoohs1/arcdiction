@@ -444,7 +444,7 @@ export default function Mercados() {
                     border: "none",
                     cursor: "pointer",
                     font: "inherit",
-                    background: "#0a2540",
+                    background: "#123a5e",
                     color: "#fff",
                     fontWeight: 500,
                     fontSize: 14,
