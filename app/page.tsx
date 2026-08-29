@@ -135,7 +135,7 @@ export default function Home() {
                       display: "flex",
                       alignItems: "center",
                       justifyContent: "center",
-                      background: "#0a2540",
+                      background: "#123a5e",
                       color: "#fff",
                       fontWeight: 500,
                       fontSize: 14,
